@@ -5,7 +5,105 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Para ti 💗</title>
 <style>
-  /* (mantén aquí todo tu CSS tal como lo tenías antes, no lo borres) */
+  :root{
+    --ink:#1a1b26;
+    --pink:#ffc8dd; --pink2:#ffafcc;
+    --lav:#e2d9f3; --purple:#cdb4db;
+    --blue:#bde0fe; --blue2:#a2d2ff;
+    --muted:#eef1f7;
+  }
+  html,body{height:100%;margin:0}
+  body{
+    font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    color:#fff; overflow:hidden;
+    background: radial-gradient(1200px 600px at 50% -15%, var(--lav), var(--ink));
+    animation: sky 14s ease-in-out infinite alternate;
+  }
+  @keyframes sky{
+    0% { background: radial-gradient(1200px 600px at 50% -15%, var(--lav), var(--ink)); }
+    50%{ background: radial-gradient(1200px 600px at 50% -15%, var(--pink), #171825); }
+    100%{background: radial-gradient(1200px 600px at 50% -15%, var(--blue), #14151f);}
+  }
+
+  /* Estrellas */
+  .stars,.stars:after{
+    content:""; position:fixed; inset:0; background-repeat:repeat;
+    background-image:
+      radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.7) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 140px 80px, rgba(255,255,255,.6) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 300px 120px, rgba(255,255,255,.55) 50%, transparent 51%),
+      radial-gradient(2px 2px at 500px 200px, rgba(255,255,255,.65) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 760px 60px, rgba(255,255,255,.55) 50%, transparent 51%);
+    background-size: 800px 400px; opacity:.16; z-index:0; animation: twinkle 6s linear infinite;
+  }
+  .stars:after{animation-delay:3s; opacity:.12; filter:blur(.5px)}
+  @keyframes twinkle{0%,100%{opacity:.1}50%{opacity:.18}}
+
+  .wrap{position:relative; height:100%; display:grid; place-items:center; padding:22px; z-index:1}
+  .card{
+    width:min(940px, 94vw);
+    background: rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.20);
+    border-radius:30px;
+    padding:28px 26px 36px;
+    text-align:center;
+    box-shadow:0 28px 80px rgba(0,0,0,.45);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Corazón central */
+  .heart-big{
+    width:140px; height:140px; margin:0 auto 10px; position:relative;
+    transform: rotate(45deg);
+    background: radial-gradient(circle at 30% 30%, #ffe6f0, var(--pink2) 60%);
+    box-shadow: 0 0 25px rgba(255,175,204,.7), 0 0 80px rgba(255,175,204,.25);
+    animation: beat 1.2s ease-in-out infinite;
+  }
+  .heart-big:before,.heart-big:after{
+    content:""; position:absolute; width:140px; height:140px; border-radius:50%;
+    background:inherit; left:-70px; top:0;
+  }
+  .heart-big:after{ left:0; top:-70px }
+  @keyframes beat{0%,100%{transform:rotate(45deg) scale(1)} 30%{transform:rotate(45deg) scale(1.06)} 60%{transform:rotate(45deg) scale(1.12)}}
+
+  h1{
+    margin:0 0 6px; font-weight:900; letter-spacing:.2px;
+    font-size:clamp(1.6rem,5.2vw,2.6rem);
+    text-shadow:0 2px 12px rgba(0,0,0,.35);
+  }
+
+  /* Botón */
+  .btn{
+    display:inline-block; margin-top:14px; padding:14px 22px; border-radius:16px;
+    font-weight:800; text-decoration:none; transition:.25s; position:relative;
+    background:#545a71; color:#cfd3e6; pointer-events:none; opacity:.78;
+    box-shadow:0 12px 30px rgba(0,0,0,.3);
+  }
+  .btn.active{
+    pointer-events:auto; opacity:1; color:#fff;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
+    box-shadow:0 12px 34px rgba(255, 168, 220, .35), inset 0 0 0 1px rgba(255,255,255,.35);
+    animation: breathe 2.2s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{filter:saturate(1) brightness(1)}50%{filter:saturate(1.15) brightness(1.08)}}
+  .btn.active::after{
+    content:""; position:absolute; top:0; left:-120%;
+    width:120%; height:100%; transform:skewX(-20deg);
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.65) 50%, transparent 100%);
+    opacity:.0; transition:.35s;
+  }
+  .btn.active:hover{transform:translateY(-2px) scale(1.02)}
+  .btn.active:hover::after{left:120%; opacity:.25}
+
+  /* Corazones flotantes */
+  .h{position:fixed; width:12px; height:12px; transform:rotate(45deg);
+     background:var(--pink); box-shadow:0 0 8px rgba(255,200,221,.8);
+     opacity:.95; z-index:0; animation: floatUp linear forwards;}
+  .h:before,.h:after{content:""; position:absolute; width:12px; height:12px; border-radius:50%; background:inherit; left:-6px; top:0}
+  .h:after{left:0; top:-6px}
+  @keyframes floatUp{0%{transform:translateY(0) rotate(45deg) scale(1); opacity:.95}100%{transform:translateY(-110vh) rotate(45deg) scale(1.2); opacity:0}}
+
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important} }
 </style>
 </head>
 <body>
@@ -15,11 +113,8 @@
     <main class="card" role="status" aria-live="polite">
       <div class="heart-big" aria-hidden="true"></div>
       <h1>Algo bonito está a punto de aparecer aquí</h1>
-      
-      <!-- ❌ Quitamos el párrafo del mensaje -->
-      <!-- <p id="msg">Cargando estado…</p> -->
 
-      <!-- Botón cambiado -->
+      <!-- Botón: texto actualizado -->
       <a id="giftBtn" class="btn" href="#" target="_blank" rel="noopener">Un regalito ✨</a>
     </main>
   </div>
@@ -27,27 +122,50 @@
   <script>
     const btn = document.getElementById("giftBtn");
 
-    /* ===== Lógica del candado ===== */
+    // === Lógica del candado con unlock.json ===
     async function checkGate(){
       try{
         const res = await fetch("unlock.json?ts=" + Date.now(), { cache:"no-store" });
         const data = await res.json();
-
         if(data.open && data.pdf){
           if(!btn.classList.contains("active")){
             btn.classList.add("active");
+            burstHearts(60);
           }
           btn.href = data.pdf;
         }else{
           btn.classList.remove("active");
           btn.href = "#";
         }
-      }catch(e){
-        // ya no mostramos mensaje, simplemente ignoramos
-      }
+      }catch(e){ /* silencio elegante */ }
     }
     checkGate();
     setInterval(checkGate, 5000);
+
+    // === Corazones flotantes continuos ===
+    function makeHeart(x,y,dur,color,size=12){
+      const h=document.createElement("div");
+      h.className="h";
+      h.style.left=x+"vw"; h.style.top=y+"vh";
+      h.style.width=h.style.height=size+"px";
+      h.style.background=color;
+      h.style.animationDuration=dur+"ms";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),dur);
+    }
+    function sprinkleHearts(count=8){
+      const colors=["#ffc8dd","#ffafcc","#cdb4db","#bde0fe","#a2d2ff","#ffe3f0"];
+      for(let i=0;i<count;i++){
+        const x=Math.random()*100;
+        const y=100+Math.random()*20;
+        const dur=5000+Math.random()*4500;
+        const color=colors[Math.floor(Math.random()*colors.length)];
+        const size=10+Math.random()*8;
+        setTimeout(()=>makeHeart(x,y,dur,color,size), i*70);
+      }
+    }
+    setInterval(()=>sprinkleHearts(6), 1200);
+    function burstHearts(n){ sprinkleHearts(n); }
   </script>
 </body>
 </html>
