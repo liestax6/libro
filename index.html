@@ -1,75 +1,196 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Tu regalo 💖</title>
-  <style>
-    body {
-      background: linear-gradient(160deg,#1a1b26,#0f0f14);
-      color: #f5f5f5;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      text-align: center;
-    }
-    h1 { font-size: 1.8rem; margin-bottom: 15px; }
-    p { margin-bottom: 25px; font-size: 1.1rem; }
-    a.btn {
-      display: inline-block;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-weight: bold;
-      text-decoration: none;
-      background: #888;
-      color: #222;
-      pointer-events: none;
-      opacity: 0.6;
-      transition: all 0.3s ease;
-    }
-    a.btn.active {
-      background: #ff7ac6;
-      color: #fff;
-      pointer-events: auto;
-      opacity: 1;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tu regalo 💖</title>
+<style>
+  :root{
+    --pink:#ffc8dd; --pink2:#ffafcc;
+    --purple:#cdb4db; --lav:#e2d9f3;
+    --blue:#bde0fe; --blue2:#a2d2ff;
+    --ink:#1a1b26; --muted:#e9ecf3;
+    --btn:#ff7ac6; --btnInk:#2b2d42;
+  }
+
+  /* Fondo con gradiente animado */
+  html,body{height:100%; margin:0}
+  body{
+    font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    color:#fff; overflow:hidden;
+    background: radial-gradient(1200px 600px at 50% -10%, var(--lav), var(--ink));
+    animation: sky 14s ease-in-out infinite alternate;
+  }
+  @keyframes sky{
+    0% { background: radial-gradient(1200px 600px at 50% -10%, var(--lav), var(--ink)); }
+    100%{ background: radial-gradient(1200px 600px at 50% -10%, var(--blue), #14151f); }
+  }
+
+  /* Contenedor centrado */
+  .wrap{position:relative; height:100%; display:grid; place-items:center; padding:20px}
+  .card{
+    width:min(820px,92vw);
+    background: rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:28px;
+    padding:28px 26px 34px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    backdrop-filter: blur(10px);
+  }
+  h1{
+    margin:0 0 8px; font-weight:800;
+    font-size:clamp(1.4rem,4.8vw,2.2rem);
+    text-shadow:0 2px 10px rgba(0,0,0,.25);
+  }
+  .headline-emoji{filter: drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+  #msg{margin:8px 0 18px; color:var(--muted)}
+
+  /* Botón bloqueado/activo */
+  .btn{
+    display:inline-block; padding:14px 20px; border-radius:14px;
+    font-weight:700; text-decoration:none; transition:.25s;
+    background:#53586d; color:#cfd3e6; pointer-events:none; opacity:.75;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+  }
+  .btn.active{
+    pointer-events:auto; opacity:1; color:#fff;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
+    box-shadow:0 10px 30px rgba(255, 168, 220, .35);
+    animation: breathe 2.2s ease-in-out infinite;
+  }
+  .btn.active:hover{transform:translateY(-2px) scale(1.02)}
+  @keyframes breathe{0%,100%{filter:saturate(1)}50%{filter:saturate(1.15)}}
+
+  /* Corazones flotando */
+  .heart{
+    position:fixed; width:14px; height:14px; transform:rotate(45deg);
+    background:var(--pink);
+    box-shadow: 0 0 8px rgba(255,200,221,.8);
+    opacity:.95; z-index:0;
+    animation: floatUp linear forwards;
+  }
+  .heart:before,.heart:after{
+    content:""; position:absolute; width:14px; height:14px; border-radius:50%;
+    background:inherit; left:-7px; top:0;
+  }
+  .heart:after{ left:0; top:-7px }
+
+  @keyframes floatUp{
+    0%{ transform:translateY(0) rotate(45deg) scale(1); opacity:.95 }
+    100%{ transform:translateY(-110vh) rotate(45deg) scale(1.2); opacity:0 }
+  }
+
+  /* Frases flotantes */
+  .phrase{
+    position:fixed; color:#ffffff; font-weight:700; letter-spacing:.3px;
+    text-shadow:0 1px 8px rgba(0,0,0,.4);
+    opacity:0; z-index:0; white-space:nowrap;
+    animation: drift 6.5s ease-in-out forwards;
+  }
+  @keyframes drift{
+    0%{ transform:translateX(-20px); opacity:0 }
+    10%{ opacity:1 }
+    50%{ transform:translateX(20px); opacity:1 }
+    100%{ transform:translateX(60px); opacity:0 }
+  }
+
+  /* Respeto a usuarios con reduce-motion */
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important}
+  }
+</style>
 </head>
 <body>
-  <h1>💌 Espera a que Diego despierte para ver tu regalo 💌</h1>
-  <p id="msg">Cargando estado...</p>
-  <a id="giftBtn" class="btn" href="#" target="_blank" rel="noopener">Tu regalo (PDF)</a>
+  <div class="wrap">
+    <main class="card" role="status" aria-live="polite">
+      <h1>
+        <span class="headline-emoji">💌</span>
+        Espera a que <strong>Diego</strong> despierte para ver tu regalo
+        <span class="headline-emoji">💌</span>
+      </h1>
+      <p id="msg">Cargando estado…</p>
+      <a id="giftBtn" class="btn" href="#" target="_blank" rel="noopener">Tu regalo (PDF)</a>
+    </main>
+  </div>
 
   <script>
     const msg = document.getElementById("msg");
     const btn = document.getElementById("giftBtn");
 
-    async function checkGate() {
-      try {
-        const res = await fetch("unlock.json?ts=" + Date.now(), { cache: "no-store" });
+    /* === Lógica del candado === */
+    async function checkGate(){
+      try{
+        const res = await fetch("unlock.json?ts=" + Date.now(), { cache:"no-store" });
         const data = await res.json();
 
-        msg.textContent = data.message || "Esperando...";
+        msg.textContent = data.message || "Esperando…";
 
-        if (data.open && data.pdf) {
-          btn.classList.add("active");
+        if(data.open && data.pdf){
+          if(!btn.classList.contains("active")){
+            btn.classList.add("active");
+            sprinkleHearts(40); // estallido de corazones al desbloquear
+            cyclePhrases();     // activar frases
+          }
           btn.href = data.pdf;
-        } else {
+        }else{
           btn.classList.remove("active");
           btn.href = "#";
         }
-      } catch (e) {
-        msg.textContent = "Error al conectar...";
+      }catch(e){
+        msg.textContent = "Reconectando…";
       }
     }
-
-    // Revisar cada 5 segundos
     checkGate();
     setInterval(checkGate, 5000);
+
+    /* === Corazones aleatorios constantes === */
+    function makeHeart(x, y, dur, color){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.style.left = x + "vw";
+      h.style.top  = y + "vh";
+      h.style.background = color;
+      h.style.animationDuration = dur + "ms";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), dur);
+    }
+    function sprinkleHearts(count=20){
+      const colors = ["#ffc8dd","#ffafcc","#cdb4db","#bde0fe","#a2d2ff"];
+      for(let i=0;i<count;i++){
+        const x = Math.random()*100;
+        const y = 100 + Math.random()*20;
+        const dur = 4500 + Math.random()*3500;
+        const color = colors[Math.floor(Math.random()*colors.length)];
+        setTimeout(()=>makeHeart(x,y,dur,color), i*40);
+      }
+    }
+    // Corazones suaves permanentes
+    setInterval(()=>sprinkleHearts(6), 1500);
+
+    /* === Frases pastel flotantes === */
+    const phrases = [
+      "Te amo", "Eres mi cielo", "Contigo siempre",
+      "Gracias por existir", "Mi lugar favorito: tú",
+      "Eres mi paz", "Eres mi hogar", "Te elijo hoy y siempre"
+    ];
+    function spawnPhrase(){
+      const p = document.createElement("div");
+      p.className = "phrase";
+      p.textContent = phrases[Math.floor(Math.random()*phrases.length)];
+      const pastel = ["#fff","#ffe3f0","#f3e8ff","#e6f1ff","#fdf1ff"];
+      p.style.color = pastel[Math.floor(Math.random()*pastel.length)];
+      p.style.left = (5 + Math.random()*80) + "vw";
+      p.style.top  = (10 + Math.random()*70) + "vh";
+      p.style.fontSize = (14 + Math.random()*12) + "px";
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(), 6500);
+    }
+    function cyclePhrases(){
+      spawnPhrase();
+      setInterval(spawnPhrase, 1200);
+    }
+
   </script>
 </body>
 </html>
