@@ -72,6 +72,18 @@
     text-shadow:0 2px 12px rgba(0,0,0,.35);
   }
 
+  /* Cuenta regresiva */
+  .cd{display:flex; gap:10px; justify-content:center; align-items:center; margin:10px 0 8px; flex-wrap:wrap}
+  .tile{
+    background: rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:16px;
+    padding:10px 12px; min-width:74px;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .num{display:block; font-weight:900; font-size:clamp(1.4rem,6vw,2.2rem)}
+  .lab{display:block; font-size:.78rem; color:var(--muted); letter-spacing:.8px; text-transform:uppercase}
+
   /* Botón */
   .btn{
     display:inline-block; margin-top:14px; padding:14px 22px; border-radius:16px;
@@ -114,15 +126,25 @@
       <div class="heart-big" aria-hidden="true"></div>
       <h1>Algo bonito está a punto de aparecer aquí</h1>
 
-      <!-- Botón: texto actualizado -->
+      <!-- Cuenta regresiva -->
+      <div class="cd" id="cd">
+        <div class="tile"><span id="d" class="num">0</span><span class="lab">DÍAS</span></div>
+        <div class="tile"><span id="h" class="num">00</span><span class="lab">HORAS</span></div>
+        <div class="tile"><span id="m" class="num">00</span><span class="lab">MIN</span></div>
+        <div class="tile"><span id="s" class="num">00</span><span class="lab">SEG</span></div>
+      </div>
+
+      <!-- Botón -->
       <a id="giftBtn" class="btn" href="#" target="_blank" rel="noopener">Un regalito ✨</a>
     </main>
   </div>
 
   <script>
     const btn = document.getElementById("giftBtn");
+    const el = { d:document.getElementById('d'), h:document.getElementById('h'),
+                 m:document.getElementById('m'), s:document.getElementById('s') };
 
-    // === Lógica del candado con unlock.json ===
+    /* ===== Lógica del candado con unlock.json ===== */
     async function checkGate(){
       try{
         const res = await fetch("unlock.json?ts=" + Date.now(), { cache:"no-store" });
@@ -142,7 +164,37 @@
     checkGate();
     setInterval(checkGate, 5000);
 
-    // === Corazones flotantes continuos ===
+    /* ===== Cuenta regresiva =====
+       Objetivo: 20 de agosto a las 00:00 *hora local del dispositivo*.  */
+    const target = new Date(2025, 7, 20, 0, 0, 0); // Año, MES(0=enero), día, hora
+
+    function pad2(n){ return n.toString().padStart(2,'0'); }
+    function updateCountdown(){
+      const now = new Date();
+      let diff = target - now;
+      if(diff <= 0){
+        el.d.textContent = '0';
+        el.h.textContent = '00';
+        el.m.textContent = '00';
+        el.s.textContent = '00';
+        clearInterval(cdTimer);
+        burstHearts(120); // fiesta al llegar a 0
+        return;
+      }
+      const totalSec = Math.floor(diff/1000);
+      const days = Math.floor(totalSec/86400);
+      const hours = Math.floor((totalSec%86400)/3600);
+      const mins  = Math.floor((totalSec%3600)/60);
+      const secs  = totalSec%60;
+      el.d.textContent = days;
+      el.h.textContent = pad2(hours);
+      el.m.textContent = pad2(mins);
+      el.s.textContent = pad2(secs);
+    }
+    const cdTimer = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    /* ===== Corazones flotantes continuos ===== */
     function makeHeart(x,y,dur,color,size=12){
       const h=document.createElement("div");
       h.className="h";
