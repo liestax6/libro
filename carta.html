@@ -26,7 +26,6 @@
     100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
   }
 
-  /* corazones de fondo */
   .h{position:fixed;width:12px;height:12px;transform:rotate(45deg);
      background:var(--pink); box-shadow:0 0 8px rgba(255,200,221,.8);
      opacity:.95; z-index:0; animation:floatUp linear forwards}
@@ -35,12 +34,10 @@
   @keyframes floatUp{0%{transform:translateY(0) rotate(45deg) scale(1);opacity:.95}
                      100%{transform:translateY(-110vh) rotate(45deg) scale(1.2);opacity:0}}
 
-  /* ===== CENTRADO REAL DE PANTALLA ===== */
   .wrap{
-    min-height: 100vh;          /* fallback */
-    min-height: 100dvh;         /* viewport real en móviles */
+    min-height: 100dvh;
     display:grid;
-    place-items:center;         /* centra vertical y horizontal */
+    place-items:center;
     padding:16px;
     position:relative;
     z-index:1;
@@ -55,7 +52,7 @@
     backdrop-filter:blur(10px);
     padding:24px 18px 30px;
     text-align:center;
-    margin:0 auto;              /* centra horizontal por si acaso */
+    margin:0 auto;
   }
 
   h1{
@@ -65,11 +62,10 @@
   }
   .sub{color:#eef1f7; opacity:.9; margin:0 0 12px}
 
-  /* Sobre */
   .envelope{
     position:relative; width:min(520px, 90vw);
     height:260px; cursor:pointer; perspective:1200px;
-    margin:12px auto 0;         /* centrado horizontal exacto */
+    margin:12px auto 0;
   }
   .env-body{
     position:relative; width:100%; height:100%; border-radius:18px; overflow:hidden;
@@ -88,60 +84,58 @@
     background:#fff; color:#333; border-radius:14px; padding:16px 14px; overflow:auto;
     box-shadow:0 12px 30px rgba(0,0,0,.25);
     transform:translateY(120%); transition:transform .9s cubic-bezier(.2,.8,.2,1) .15s;
-    backface-visibility:hidden; /* nunca invertida */
+    backface-visibility:hidden;
   }
   .paper h3{margin:4px 0 8px; color:#e95d8a}
-  .paper p{margin:.5em 0; line-height:1.7}
+  .paper p{margin:.5em 0; line-height:1.7; text-align:justify}
 
   .envelope.open .flap{ transform: rotateX(-180deg); }
   .envelope.open .paper{ transform: translateY(0%); }
 
-  /* Botón */
   .btn{
     display:inline-block; margin-top:12px; padding:12px 16px; border-radius:14px; font-weight:800;
     color:#fff; text-decoration:none; background:linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
     border:1px solid rgba(255,255,255,.5); box-shadow:0 12px 30px rgba(255,168,220,.35);
   }
-
-  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
 <body>
 
-  <!-- corazones de fondo auto -->
-  <div id="bg"></div>
+<div id="bg"></div>
 
-  <div class="wrap">
-    <div class="glass">
-      <h1>Para ti, con todo mi amor</h1>
-      <p class="sub">Toca el sobre para abrir tu mensaje 💖</p>
+<div class="wrap">
+  <div class="glass">
+    <h1>Para ti, con todo mi amor</h1>
+    <p class="sub">Toca el sobre para abrir tu mensaje 💖</p>
 
-      <div id="env" class="envelope" title="Haz clic para abrir">
-        <div class="env-body">
-          <div class="flap"></div>
-          <div class="paper">
-            <h3>Mi carta para ti 💌</h3>
-            <p>
-              Gracias por estar. No traigo recuerdos complicados; traigo lo que siento hoy:
-              que te elijo, que quiero cuidarnos con paciencia y hechos, y que deseo un
-              futuro donde la distancia ya no exista entre nosotros.
-            </p>
-            <p>
-              Prometo escucharte de verdad, sorprenderte con detalles y recordarte en los
-              días difíciles que eres mi lugar seguro. Eres mi persona favorita.
-            </p>
-            <p style="opacity:.8">— Diego</p>
+    <div id="env" class="envelope" title="Haz clic para abrir">
+      <div class="env-body">
+        <div class="flap"></div>
+        <div class="paper">
+          <h3>Mi carta para ti 💌</h3>
+          <p>
+            Hola mi amor, feliz día. Estoy muy feliz de estar estos 13 meses contigo.  
+            Pasó exactamente un año desde que cumplimos un mes. Todavía recuerdo ese día que estaba nervioso porque te daría tu primer detalle de primer mes. Estaba en la escuela y me pasé todo el día pensando en cómo sería.
+          </p>
+          <p>
+            Hoy, un año después, aquí estoy, volviendo a escribir y a recordar los bonitos momentos que vivimos todo ese año. Y aunque fue difícil, siento que aprendimos muchas cosas, y yo sé que este año será mejor que el anterior.
+          </p>
+          <p>
+            Con todo lo que pasamos, con todo lo que sufrimos, aprendimos, y sobre todo con todo el amor que acumulamos, sé que nos elegiremos mutuamente. Estoy muy contento de poder seguir con mi hermosa princesa.
+          </p>
+          <p>
+            Quiero cuidarte por siempre y luchar juntos para romper la distancia. 💖
+          </p>
 
-            <a class="btn" href="./" aria-label="Volver a la página principal">Volver</a>
-          </div>
+          <a class="btn" href="./">Volver</a>
         </div>
       </div>
-
     </div>
+
   </div>
+</div>
 
 <script>
-  // ===== corazones de fondo constantes =====
   function makeHeart(x,y,dur,color,size=12){
     const h=document.createElement('div');
     h.className='h';
@@ -165,7 +159,6 @@
   }
   setInterval(()=>sprinkleHearts(5),1400);
 
-  // ===== abrir sobre + estallido de corazones =====
   const env = document.getElementById('env');
   let opened = false;
   env.addEventListener('click', ()=>{
