@@ -8,9 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
+    --ink:#101321; --muted:#e9ecf6;
     --pink:#ffc8dd; --purple:#cdb4db; --blue:#bde0fe; --blue2:#a2d2ff;
     --panel:rgba(255,255,255,.08); --border:rgba(255,255,255,.22);
-    --muted:#e9ecf6; --ink:#0f1320;
     --glow:0 18px 60px rgba(0,0,0,.45);
   }
   *{box-sizing:border-box}
@@ -36,6 +36,8 @@
     background:var(--panel); border:1px solid var(--border); border-radius:22px;
     box-shadow:var(--glow); backdrop-filter:blur(10px);
   }
+
+  /* Lista izquierda */
   .left{padding:14px}
   .event{
     border:1px solid rgba(255,255,255,.18);
@@ -51,7 +53,9 @@
     position:absolute; right:-10px; top:14px; width:14px; height:14px; border-radius:50%;
     background:linear-gradient(135deg, var(--pink), var(--blue2)); box-shadow:0 0 0 4px rgba(255,255,255,.12);
   }
+  .event.active{outline:2px solid rgba(255,255,255,.35)}
 
+  /* Visor derecho */
   .viewer-head{
     display:flex; align-items:center; gap:10px; padding:12px 14px;
     border-bottom:1px solid rgba(255,255,255,.15)
@@ -66,59 +70,28 @@
   .viewer-body{padding:14px; min-height:280px}
   .intro{margin-top:8px; opacity:.95}
 
-  /* ===== Recuadros de recuerdos (tarjetas) ===== */
+  /* Tarjetas de imagen + texto (todas visibles) */
   .mem-grid{
     margin-top:14px;
     display:grid; gap:14px;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
-
-  /* Marco decorado con borde degradado */
-  .mem{
-    position:relative;
-    border-radius:18px;
-    padding:1px;                         /* para el borde degradado */
+  .memory-card{
+    position:relative; border-radius:18px; padding:2px;
     background:linear-gradient(135deg, var(--pink), var(--blue2));
     box-shadow:0 16px 42px rgba(0,0,0,.35);
-    cursor:pointer;
-    transition:transform .2s ease;
   }
-  .mem:hover{ transform: translateY(-3px); }
-  .mem-inner{
-    border-radius:17px;
-    background:rgba(20,22,37,.75);
-    border:1px solid rgba(255,255,255,.15);
-    overflow:hidden;
+  .memory-inner{
+    border-radius:16px; overflow:hidden;
+    background:rgba(20,22,37,.8); border:1px solid rgba(255,255,255,.18)
   }
-
-  /* Mini cabecera de la tarjeta */
-  .mem-head{
-    padding:10px 12px; display:flex; align-items:center; gap:8px;
-    border-bottom:1px solid rgba(255,255,255,.08);
+  .memory-img{
+    display:block; width:100%; height:auto; object-fit:cover;
+    aspect-ratio:4/3;
   }
-  .pill{
-    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.35);
-    padding:6px 10px; border-radius:999px; font-weight:800; font-size:.85rem;
-  }
-
-  /* Imagen y contenido desplegable */
-  .mem-img{
-    width:100%; height:auto; display:block; object-fit:cover;
-    max-height:0; opacity:0; transform:scale(.98);
-    transition:max-height .38s ease, opacity .25s ease, transform .38s ease;
-  }
-  .mem-text{
+  .memory-text{
     padding:12px; line-height:1.7; color:#fff;
     border-top:1px solid rgba(255,255,255,.08);
-    max-height:0; opacity:.0; transition:max-height .4s ease, opacity .25s ease;
-  }
-
-  /* Estado abierto */
-  .mem.open .mem-img{
-    max-height:70vh; opacity:1; transform:scale(1);
-  }
-  .mem.open .mem-text{
-    max-height:400px; opacity:1;
   }
 
   /* Botón final */
@@ -135,7 +108,7 @@
 <body>
   <header>
     <h1>Nuestra línea del tiempo ✨</h1>
-    <p class="sub">Toca un evento y luego abre cada recuadro para ver la foto con su texto. 💖</p>
+    <p class="sub">Toca un evento y verás todas sus fotos y texto juntos. 💖</p>
   </header>
 
   <main class="wrap">
@@ -152,7 +125,7 @@
         </div>
       </div>
       <div class="viewer-body">
-        <div id="vIntro" class="intro">Aquí aparecerán tarjetas. Abre cada una para ver la imagen y el texto juntos. 🌟</div>
+        <div id="vIntro" class="intro">Aquí aparecerán todas las tarjetas con imagen + texto, sin tener que abrir una por una. 🌟</div>
         <div id="memGrid" class="mem-grid"></div>
       </div>
     </section>
@@ -165,48 +138,48 @@
 
 <script>
 /* ========= EDITA AQUÍ TUS EVENTOS =========
-   Cada evento puede tener varias "items" (recuadros).
-   items: [{ img: "ruta.jpg", text: "texto" }, ...] */
+   Cada evento puede tener varias "memorias" (tarjetas).
+   memories: [{ img: "ruta.jpg", text: "texto" }, ...] */
 const timeline = [
   {
     date: "30 Jul 2024",
     title: "Mi primera carta para ti",
-    intro: "Recuerdo de la primera vez que te escribir una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien",
-    items: [
-      { img: "IMG-20250819-WA0029.jpg", text: "Este fue el inicio de todo. Te escribí con el corazón latiendo a mil y esperanza en el pecho." }
+    intro: `Recuerdo de la primera vez que te escribir una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien.`,
+    memories: [
+      { img: "IMG-20250819-WA0029.jpg", text: "El inicio de todo. Te escribí con el corazón en la mano y con mucha ilusión." }
     ]
   },
   {
     date: "22 Jul 2024",
     title: "Tu primera carta para mí",
-    intro: "Esta fue la primera vez que me escribiste una carta, me lo escribiste poquito despues de que te pidiera ser mi novia, senti muy bonito al leerla y ame que nuestros sentimientos fueran mutuo.",
-    items: [
-      { img: "IMG-20250819-WA0024.jpg", text: "Tus palabras me abrazaron. Sentí que tenía un lugar seguro contigo." },
+    intro: `Esta fue la primera vez que me escribiste una carta, me lo escribiste poquito después de que te pidiera ser mi novia, sentí muy bonito al leerla y amé que nuestros sentimientos fueran mutuos.`,
+    memories: [
+      { img: "IMG-20250819-WA0024.jpg", text: "Tus palabras me abrazaron; me sentí elegido." }
     ]
   },
   {
     date: "12 May 2025",
     title: "La primera vez que nos vimos",
-    intro: "Este fue el dia mas feliz de mi vida, conocí al amor de mi vida y cuando te abrace me senti en el cielo, ame mucho ese dia porque porfin pude verte en persona y me enamore mucho mas de lo que ya estaba, me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta.",
-    items: [
-      { img: "IMG-20250819-WA0030.jpg", text: "Tus ojos, tu risa, el abrazo… entendí lo que es el hogar." }
+    intro: `Este fue el día más feliz de mi vida, conocí al amor de mi vida y cuando te abracé me sentí en el cielo... me enamoré mucho más de lo que ya estaba.`,
+    memories: [
+      { img: "IMG-20250819-WA0030.jpg", text: "Tu risa, tus ojos, el abrazo. Entendí lo que es el hogar." }
     ]
   },
   {
     date: "20 Jul 2025",
     title: "Las primeras flores que te di",
-    intro: "Estas fueron las primeras flores que te di, estaba muy nervioso porque no sabía como enviarte, no sabía si te iban a gustar además que era la primera vez que enviaba algo a tu casa, espero que te hayan gustado porque se que en el futuro te daré muchas mas flores mi amor.",
-    items: [
-      { img: "IMG-20250819-WA0028.jpg", text: "Te imaginé sonriendo al recibirlas. Fue un detalle pequeñito, con amor enorme." },
+    intro: `El primer ramo que te di, te imaginé sonriendo al recibirlo. Fue un detalle pequeño con un amor enorme.`,
+    memories: [
+      { img: "IMG-20250819-WA0028.jpg", text: "Quise que te llegara un pedacito de primavera." }
     ]
   },
   {
     date: "",
     title: "Tus cartas y dibujos",
-    intro: "amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito, amor cada dibujo, cada carta, todo de ti me vuelve loco mi amor.",
-    items: [
-      { img: "IMG-20250814-WA0005.jpg", text: "Me encanta cómo pones pedacitos de ti en cada dibujo." },
-      { img: "IMG-20250814-WA0003.jpg", text: "Los guardo todos. Son mi galería favorita." },
+    intro: `No tienen fecha porque llegan seguido. Gracias por cada detalle; los guardo todos con cariño.`,
+    memories: [
+      { img: "IMG-20250814-WA0003.jpg", text: "Pequeños pedazos de ti en cada trazo." },
+      { img: "IMG-20250814-WA0005.jpg: "Mi galería favorita: la que haces con amor." }
     ]
   }
 ];
@@ -235,49 +208,44 @@ function renderList() {
 
 function openEvent(i){
   const ev = timeline[i];
+
+  // Resaltar seleccionado
+  [...$list.children].forEach(el => el.classList.remove('active'));
+  $list.children[i].classList.add('active');
+
   $vTitle.textContent = ev.title;
   $vDate.textContent  = ev.date || "Sin fecha";
   $vIntro.textContent = ev.intro || "";
-  renderMemGrid(ev.items || []);
-}
 
-/* Crea las tarjetas (recuadros) con imagen + texto colapsable */
-function renderMemGrid(items){
+  // Renderizar TODAS las tarjetas del evento (imagen + texto)
   $grid.innerHTML = "";
-  items.forEach((it, idx)=>{
-    const mem = document.createElement('article');
-    mem.className = "mem";
-    mem.innerHTML = `
-      <div class="mem-inner">
-        <div class="mem-head">
-          <span class="pill">Recuerdo ${idx+1}</span>
-          <span style="opacity:.85">Toca para abrir / cerrar</span>
-        </div>
-        <img class="mem-img" src="${it.img}" alt="recuerdo-${idx}">
-        <div class="mem-text">${sanitize(it.text || "")}</div>
+  (ev.memories || []).forEach(mem => {
+    const card = document.createElement('article');
+    card.className = "memory-card";
+    card.innerHTML = `
+      <div class="memory-inner">
+        <img class="memory-img" src="${mem.img}" alt="${escapeAttr(ev.title)}">
+        <div class="memory-text">${sanitize(mem.text || "")}</div>
       </div>
     `;
-    mem.addEventListener('click', ()=>{
-      mem.classList.toggle('open');
-    });
-    $grid.appendChild(mem);
+    $grid.appendChild(card);
   });
 
-  if (items.length === 0) {
-    $grid.innerHTML = `<p style="opacity:.9">Este evento no tiene imágenes aún, pero pronto habrá. 💫</p>`;
+  if ((ev.memories || []).length === 0) {
+    $grid.innerHTML = `<p style="opacity:.9">Este evento no tiene imágenes aún. 💫</p>`;
   }
+
+  // Desplazar al inicio del visor en móviles
+  document.querySelector('.viewer-head').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
+// Utilidades
 function sanitize(str=""){
   return str.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
 }
+function escapeAttr(s=""){ return s.replace(/"/g,'&quot;'); }
 
 renderList();
 </script>
-
-  <!-- Botón final -->
-  <div class="footer">
-    <a class="cta" href="./regalo.html">🎁 Ir a elegir mi regalo</a>
-  </div>
 </body>
 </html>
