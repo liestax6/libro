@@ -8,25 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#1a1b26; --muted:#e9ecf6;
-    --pink:#ffc8dd; --blue2:#a2d2ff;
+    --pink:#ffc8dd; --purple:#cdb4db; --blue:#bde0fe; --blue2:#a2d2ff;
     --panel:rgba(255,255,255,.08); --border:rgba(255,255,255,.22);
+    --muted:#e9ecf6; --ink:#0f1320;
     --glow:0 18px 60px rgba(0,0,0,.45);
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
   body{
     font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;
-    color:#fff; background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
+    color:#fff; background: radial-gradient(1200px 600px at 50% -12%, #eadff6, #141625);
     animation: sky 14s ease-in-out infinite alternate; padding:16px;
   }
   @keyframes sky{
-    0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
-    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
-    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
+    0%{background:radial-gradient(1200px 600px at 50% -12%, #eadff6, #141625)}
+    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #10121f)}
+    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #0f1320)}
   }
   header{max-width:1100px;margin:0 auto 12px;text-align:center}
-  h1{margin:6px 0 2px; font-weight:900; font-size:clamp(1.5rem,5.2vw,2.4rem); text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  h1{margin:6px 0 2px; font-weight:900; font-size:clamp(1.6rem,5.2vw,2.6rem); text-shadow:0 2px 12px rgba(0,0,0,.35)}
   .sub{margin:0 0 12px; color:var(--muted)}
 
   .wrap{max-width:1100px;margin:0 auto; display:grid; gap:14px; grid-template-columns:1fr}
@@ -52,7 +52,6 @@
     background:linear-gradient(135deg, var(--pink), var(--blue2)); box-shadow:0 0 0 4px rgba(255,255,255,.12);
   }
 
-  .right{overflow:hidden}
   .viewer-head{
     display:flex; align-items:center; gap:10px; padding:12px 14px;
     border-bottom:1px solid rgba(255,255,255,.15)
@@ -62,28 +61,64 @@
     border:1px solid rgba(255,255,255,.4); color:#fff; font-weight:800;
     border-radius:999px; padding:8px 14px; text-decoration:none; box-shadow:0 10px 28px rgba(255,168,220,.35)
   }
-  .viewer-body{padding:14px; min-height:300px}
   .viewer-title{margin:4px 0 2px; font-weight:900}
   .viewer-date{opacity:.85}
-  .viewer-text{margin-top:10px; line-height:1.7}
+  .viewer-body{padding:14px; min-height:280px}
+  .intro{margin-top:8px; opacity:.95}
 
-  /* Galería */
-  .gallery{margin-top:12px; display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px}
-  .thumb{
-    width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:12px;
-    box-shadow:0 10px 24px rgba(0,0,0,.35); cursor:pointer; transition:.2s
+  /* ===== Recuadros de recuerdos (tarjetas) ===== */
+  .mem-grid{
+    margin-top:14px;
+    display:grid; gap:14px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
-  .thumb:hover{transform:translateY(-2px)}
 
-  /* Lightbox */
-  .lightbox{
-    position:fixed; inset:0; background:rgba(0,0,0,.85); display:none; place-items:center; z-index:50;
+  /* Marco decorado con borde degradado */
+  .mem{
+    position:relative;
+    border-radius:18px;
+    padding:1px;                         /* para el borde degradado */
+    background:linear-gradient(135deg, var(--pink), var(--blue2));
+    box-shadow:0 16px 42px rgba(0,0,0,.35);
+    cursor:pointer;
+    transition:transform .2s ease;
   }
-  .lightbox.open{display:grid}
-  .lightbox img{max-width:92vw; max-height:86vh; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.6)}
-  .close{
-    position:fixed; top:14px; right:14px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.6);
-    color:#fff; font-weight:900; border-radius:999px; padding:8px 14px; cursor:pointer
+  .mem:hover{ transform: translateY(-3px); }
+  .mem-inner{
+    border-radius:17px;
+    background:rgba(20,22,37,.75);
+    border:1px solid rgba(255,255,255,.15);
+    overflow:hidden;
+  }
+
+  /* Mini cabecera de la tarjeta */
+  .mem-head{
+    padding:10px 12px; display:flex; align-items:center; gap:8px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .pill{
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.35);
+    padding:6px 10px; border-radius:999px; font-weight:800; font-size:.85rem;
+  }
+
+  /* Imagen y contenido desplegable */
+  .mem-img{
+    width:100%; height:auto; display:block; object-fit:cover;
+    max-height:0; opacity:0; transform:scale(.98);
+    transition:max-height .38s ease, opacity .25s ease, transform .38s ease;
+  }
+  .mem-text{
+    padding:12px; line-height:1.7; color:#fff;
+    border-top:1px solid rgba(255,255,255,.08);
+    max-height:0; opacity:.0; transition:max-height .4s ease, opacity .25s ease;
+  }
+
+  /* Estado abierto */
+  .mem.open .mem-img{
+    max-height:70vh; opacity:1; transform:scale(1);
+  }
+  .mem.open .mem-text{
+    max-height:400px; opacity:1;
   }
 
   /* Botón final */
@@ -100,7 +135,7 @@
 <body>
   <header>
     <h1>Nuestra línea del tiempo ✨</h1>
-    <p class="sub">Toca cada recuerdo para verlo completo.</p>
+    <p class="sub">Toca un evento y luego abre cada recuadro para ver la foto con su texto. 💖</p>
   </header>
 
   <main class="wrap">
@@ -108,7 +143,7 @@
     <section id="list" class="panel left"></section>
 
     <!-- VISOR -->
-    <section class="panel right">
+    <section class="panel">
       <div class="viewer-head">
         <a class="back" href="./carta.html">Atrás</a>
         <div>
@@ -117,66 +152,70 @@
         </div>
       </div>
       <div class="viewer-body">
-        <div id="vText" class="viewer-text">Aquí verás el texto completo y, si hay, sus fotitos. 💖</div>
-        <div id="gallery" class="gallery"></div>
+        <div id="vIntro" class="intro">Aquí aparecerán tarjetas. Abre cada una para ver la imagen y el texto juntos. 🌟</div>
+        <div id="memGrid" class="mem-grid"></div>
       </div>
     </section>
   </main>
 
-  <!-- Botón al FINAL para ir al regalo -->
+  <!-- Botón al FINAL para ir a la página de regalos -->
   <div class="footer">
     <a class="cta" href="./regalo.html">🎁 Ir a elegir mi regalo</a>
   </div>
 
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" aria-hidden="true">
-    <img id="bigImg" alt="">
-    <button class="close" onclick="closeLightbox()">Cerrar ✖</button>
-  </div>
-
 <script>
-/* ========= EDITA AQUÍ TUS RECUERDOS =========
-   - Usa img: "ruta.jpg" para una imagen
-   - o imgs: ["a.jpg","b.jpg"] para varias
-   (Sube los archivos a /img/ o donde prefieras y actualiza las rutas) */
+/* ========= EDITA AQUÍ TUS EVENTOS =========
+   Cada evento puede tener varias "items" (recuadros).
+   items: [{ img: "ruta.jpg", text: "texto" }, ...] */
 const timeline = [
   {
     date: "30 Jul 2024",
     title: "Mi primera carta para ti",
-    text: `Recuerdo de la primera vez que te escribir una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien.`,
-    imgs: ["IMG-20250819-WA0029.jpg"]          // ← cambia por tus rutas
+    intro: "Recuerdo de la primera vez que te escribir una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien",
+    items: [
+      { img: "IMG-20250819-WA0029.jpg", text: "Este fue el inicio de todo. Te escribí con el corazón latiendo a mil y esperanza en el pecho." }
+    ]
   },
   {
     date: "22 Jul 2024",
     title: "Tu primera carta para mí",
-    text: `Esta fue la primera vez que me escribiste una carta, me lo escribiste poquito despues de que te pidiera ser mi novia, senti muy bonito al leerla y ame que nuestros sentimientos fueran mutuos.`,
-    imgs: ["IMG-20250819-WA0024.jpg"]
+    intro: "Esta fue la primera vez que me escribiste una carta, me lo escribiste poquito despues de que te pidiera ser mi novia, senti muy bonito al leerla y ame que nuestros sentimientos fueran mutuo.",
+    items: [
+      { img: "IMG-20250819-WA0024.jpg", text: "Tus palabras me abrazaron. Sentí que tenía un lugar seguro contigo." },
+    ]
   },
   {
     date: "12 May 2025",
     title: "La primera vez que nos vimos",
-    text: `Este fue el dia mas feliz de mi vida, conocí al amor de mi vida y cuando te abrace me senti en el cielo, ame mucho ese dia porque porfin pude verte en persona y me enamore mucho mas de lo que ya estaba, me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta.`,
-    img: "IMG-20250819-WA0030.jpg"
+    intro: "Este fue el dia mas feliz de mi vida, conocí al amor de mi vida y cuando te abrace me senti en el cielo, ame mucho ese dia porque porfin pude verte en persona y me enamore mucho mas de lo que ya estaba, me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta.",
+    items: [
+      { img: "IMG-20250819-WA0030.jpg", text: "Tus ojos, tu risa, el abrazo… entendí lo que es el hogar." }
+    ]
   },
   {
     date: "20 Jul 2025",
     title: "Las primeras flores que te di",
-    text: `Estas fueron las primeras flores que te di, estaba muy nervioso porque no sabía como enviarte, no sabía si te iban a gustar además que era la primera vez que enviaba algo a tu casa, espero que te hayan gustado porque se que en el futuro te daré muchas mas flores mi amor.`,
-    imgs: ["IMG-20250819-WA0028.jpg"]
+    intro: "Estas fueron las primeras flores que te di, estaba muy nervioso porque no sabía como enviarte, no sabía si te iban a gustar además que era la primera vez que enviaba algo a tu casa, espero que te hayan gustado porque se que en el futuro te daré muchas mas flores mi amor.",
+    items: [
+      { img: "IMG-20250819-WA0028.jpg", text: "Te imaginé sonriendo al recibirlas. Fue un detalle pequeñito, con amor enorme." },
+    ]
   },
   {
     date: "",
     title: "Tus cartas y dibujos",
-    text: `amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito, amor cada dibujo, cada carta, todo de ti me vuelve loco mi amor.`,
-    imgs: ["IMG-20250814-WA0003.jpg","IMG-20250814-WA0005.jpg"]
+    intro: "amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito, amor cada dibujo, cada carta, todo de ti me vuelve loco mi amor.",
+    items: [
+      { img: "IMG-20250814-WA0005.jpg", text: "Me encanta cómo pones pedacitos de ti en cada dibujo." },
+      { img: "IMG-20250814-WA0003.jpg", text: "Los guardo todos. Son mi galería favorita." },
+    ]
   }
 ];
 
-const $list = document.getElementById('list');
+const $list   = document.getElementById('list');
 const $vTitle = document.getElementById('vTitle');
 const $vDate  = document.getElementById('vDate');
-const $vText  = document.getElementById('vText');
-const $gallery= document.getElementById('gallery');
+const $vIntro = document.getElementById('vIntro');
+const $grid   = document.getElementById('memGrid');
 
 function renderList() {
   $list.innerHTML = "";
@@ -186,7 +225,7 @@ function renderList() {
     card.innerHTML = `
       <div class="date">${ev.date || "Sin fecha"}</div>
       <div class="title">${ev.title}</div>
-      <div class="excerpt">${sanitize(ev.text).split('\n')[0]}</div>
+      <div class="excerpt">${sanitize(ev.intro || "").split('\n')[0]}</div>
       <span class="dot"></span>
     `;
     card.addEventListener('click', () => openEvent(i));
@@ -198,41 +237,47 @@ function openEvent(i){
   const ev = timeline[i];
   $vTitle.textContent = ev.title;
   $vDate.textContent  = ev.date || "Sin fecha";
-  $vText.innerHTML    = sanitize(ev.text).replace(/\n/g, "<br>");
+  $vIntro.textContent = ev.intro || "";
+  renderMemGrid(ev.items || []);
+}
 
-  // Render galería
-  $gallery.innerHTML = "";
-  const imgs = Array.isArray(ev.imgs) ? ev.imgs : (ev.img ? [ev.img] : []);
-  imgs.forEach(src=>{
-    const img = document.createElement('img');
-    img.src = src; img.className = 'thumb'; img.alt = ev.title;
-    img.addEventListener('click', ()=> openLightbox(src));
-    $gallery.appendChild(img);
+/* Crea las tarjetas (recuadros) con imagen + texto colapsable */
+function renderMemGrid(items){
+  $grid.innerHTML = "";
+  items.forEach((it, idx)=>{
+    const mem = document.createElement('article');
+    mem.className = "mem";
+    mem.innerHTML = `
+      <div class="mem-inner">
+        <div class="mem-head">
+          <span class="pill">Recuerdo ${idx+1}</span>
+          <span style="opacity:.85">Toca para abrir / cerrar</span>
+        </div>
+        <img class="mem-img" src="${it.img}" alt="recuerdo-${idx}">
+        <div class="mem-text">${sanitize(it.text || "")}</div>
+      </div>
+    `;
+    mem.addEventListener('click', ()=>{
+      mem.classList.toggle('open');
+    });
+    $grid.appendChild(mem);
   });
+
+  if (items.length === 0) {
+    $grid.innerHTML = `<p style="opacity:.9">Este evento no tiene imágenes aún, pero pronto habrá. 💫</p>`;
+  }
 }
 
 function sanitize(str=""){
   return str.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
 }
 
-/* Lightbox */
-const $lightbox = document.getElementById('lightbox');
-const $bigImg   = document.getElementById('bigImg');
-function openLightbox(src){
-  $bigImg.src = src;
-  $lightbox.classList.add('open');
-  $lightbox.setAttribute('aria-hidden','false');
-}
-function closeLightbox(){
-  $lightbox.classList.remove('open');
-  $lightbox.setAttribute('aria-hidden','true');
-  $bigImg.src = "";
-}
-$lightbox.addEventListener('click', e=>{
-  if(e.target === $lightbox) closeLightbox();
-});
-
 renderList();
 </script>
+
+  <!-- Botón final -->
+  <div class="footer">
+    <a class="cta" href="./regalo.html">🎁 Ir a elegir mi regalo</a>
+  </div>
 </body>
 </html>
