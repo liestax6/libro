@@ -83,9 +83,88 @@
     <div class="heart" aria-hidden="true"></div>
     <h1>Algo bonito está a punto de aparecer aquí</h1>
 
-    <!-- Cuenta regresiva -->
+    <!-- Cuenta regresiva (4 casillas) -->
     <div class="cd" id="cd">
       <div class="tile"><span id="d" class="num">0</span><span class="lab">DÍAS</span></div>
       <div class="tile"><span id="h" class="num">00</span><span class="lab">HORAS</span></div>
       <div class="tile"><span id="m" class="num">00</span><span class="lab">MIN</span></div>
-      <di
+      <div class="tile"><span id="s" class="num">00</span><span class="lab">SEG</span></div>
+    </div>
+    <p id="hint" style="opacity:.9">Cuando llegue a 0 se abrirá tu sorpresa 💖</p>
+  </main>
+
+  <script>
+    /* ===== AJUSTA AQUÍ TU FECHA OBJETIVO =====
+       20 de AGOSTO a las 00:00, hora LOCAL del dispositivo.
+       Formato: new Date(YYYY, MES(0=enero), DÍA, HORA, MIN, SEG) */
+    const target = new Date(2025, 7, 20, 0, 0, 0);
+
+    const el = {
+      d: document.getElementById('d'),
+      h: document.getElementById('h'),
+      m: document.getElementById('m'),
+      s: document.getElementById('s'),
+      hint: document.getElementById('hint')
+    };
+
+    function pad2(n){ return n.toString().padStart(2,'0'); }
+
+    function updateCountdown(){
+      const now = new Date();
+      let diff = target.getTime() - now.getTime();
+
+      // Si ya pasó el objetivo (o justo llega a 0): mostrar ceros, confeti y redirigir
+      if (diff <= 0) {
+        el.d.textContent = '0';
+        el.h.textContent = '00';
+        el.m.textContent = '00';
+        el.s.textContent = '00';
+        clearInterval(timer);
+        el.hint.textContent = '¡Es el momento! Abriendo…';
+        burstHearts(120);
+        setTimeout(()=>{ window.location.replace('carta.html'); }, 900);
+        return;
+      }
+
+      const totalSec = Math.floor(diff / 1000);
+      const days  = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const mins  = Math.floor((totalSec % 3600) / 60);
+      const secs  = totalSec % 60;
+
+      el.d.textContent = days;
+      el.h.textContent = pad2(hours);
+      el.m.textContent = pad2(mins);
+      el.s.textContent = pad2(secs);
+    }
+
+    const timer = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    /* ===== Corazones flotantes ===== */
+    function makeHeart(x,y,dur,color,size=12){
+      const h=document.createElement("div");
+      h.className="h";
+      h.style.left=x+"vw"; h.style.top=y+"vh";
+      h.style.width=h.style.height=size+"px";
+      h.style.background=color;
+      h.style.animationDuration=dur+"ms";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),dur);
+    }
+    function sprinkleHearts(count=8){
+      const colors=["#ffc8dd","#ffafcc","#cdb4db","#bde0fe","#a2d2ff","#ffe3f0"];
+      for(let i=0;i<count;i++){
+        const x=Math.random()*100;
+        const y=100+Math.random()*20;
+        const dur=5000+Math.random()*4500;
+        const color=colors[Math.floor(Math.random()*colors.length)];
+        const size=10+Math.random()*8;
+        setTimeout(()=>makeHeart(x,y,dur,color,size), i*60);
+      }
+    }
+    function burstHearts(n){ sprinkleHearts(n); }
+    setInterval(()=>sprinkleHearts(5), 1400);
+  </script>
+</body>
+</html>
