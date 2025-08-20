@@ -1,175 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Carta para ti 💌</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --pink:#ffc8dd; --pink2:#ffafcc; --purple:#cdb4db;
-    --blue:#bde0fe; --blue2:#a2d2ff; --ink:#1a1b26;
-    --panel: rgba(255,255,255,.14); --border: rgba(255,255,255,.25);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0}
-  body{
-    font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    color:#222; overflow:hidden;
-    background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
-    animation: sky 14s ease-in-out infinite alternate;
-  }
-  @keyframes sky{
-    0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
-    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
-    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
-  }
+  <meta charset="UTF-8">
+  <title>Mi Carta para Ti</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: #fdf6f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
 
-  .h{position:fixed;width:12px;height:12px;transform:rotate(45deg);
-     background:var(--pink); box-shadow:0 0 8px rgba(255,200,221,.8);
-     opacity:.95; z-index:0; animation:floatUp linear forwards}
-  .h:before,.h:after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:inherit;left:-6px;top:0}
-  .h:after{left:0;top:-6px}
-  @keyframes floatUp{0%{transform:translateY(0) rotate(45deg) scale(1);opacity:.95}
-                     100%{transform:translateY(-110vh) rotate(45deg) scale(1.2);opacity:0}}
+    .carta {
+      background: white;
+      padding: 30px;
+      margin: 20px;
+      max-width: 700px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
 
-  .wrap{
-    min-height: 100dvh;
-    display:grid;
-    place-items:center;
-    padding:16px;
-    position:relative;
-    z-index:1;
-  }
+    h1 {
+      color: #d6336c;
+    }
 
-  .glass{
-    width:min(760px,94vw);
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:28px;
-    box-shadow:0 28px 80px rgba(0,0,0,.45);
-    backdrop-filter:blur(10px);
-    padding:24px 18px 30px;
-    text-align:center;
-    margin:0 auto;
-  }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #333;
+      text-align: justify;
+    }
 
-  h1{
-    margin:2px auto 10px;
-    color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.35);
-    font-size:clamp(1.4rem,5.2vw,2.2rem); font-weight:800;
-  }
-  .sub{color:#eef1f7; opacity:.9; margin:0 0 12px}
+    .boton {
+      margin-top: 25px;
+      padding: 12px 22px;
+      background: #ff4d6d;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-  .envelope{
-    position:relative; width:min(520px, 90vw);
-    height:260px; cursor:pointer; perspective:1200px;
-    margin:12px auto 0;
-  }
-  .env-body{
-    position:relative; width:100%; height:100%; border-radius:18px; overflow:hidden;
-    background:linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
-    box-shadow:0 18px 50px rgba(0,0,0,.35);
-  }
-  .flap{
-    position:absolute; inset:0; height:50%; transform-origin:top; z-index:3;
-    background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.15));
-    border-bottom:1px solid rgba(255,255,255,.45);
-    clip-path:polygon(0 0,100% 0,50% 100%);
-    transition:transform .9s cubic-bezier(.2,.8,.2,1);
-  }
-  .paper{
-    position:absolute; left:10%; right:10%; top:58%; height:72%;
-    background:#fff; color:#333; border-radius:14px; padding:16px 14px; overflow:auto;
-    box-shadow:0 12px 30px rgba(0,0,0,.25);
-    transform:translateY(120%); transition:transform .9s cubic-bezier(.2,.8,.2,1) .15s;
-    backface-visibility:hidden;
-  }
-  .paper h3{margin:4px 0 8px; color:#e95d8a}
-  .paper p{margin:.5em 0; line-height:1.7; text-align:justify}
-
-  .envelope.open .flap{ transform: rotateX(-180deg); }
-  .envelope.open .paper{ transform: translateY(0%); }
-
-  .btn{
-    display:inline-block; margin-top:12px; padding:12px 16px; border-radius:14px; font-weight:800;
-    color:#fff; text-decoration:none; background:linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
-    border:1px solid rgba(255,255,255,.5); box-shadow:0 12px 30px rgba(255,168,220,.35);
-  }
-</style>
+    .boton:hover {
+      background: #d6336c;
+    }
+  </style>
 </head>
 <body>
-
-<div id="bg"></div>
-
-<div class="wrap">
-  <div class="glass">
-    <h1>Para ti, con todo mi amor</h1>
-    <p class="sub">Toca el sobre para abrir tu mensaje 💖</p>
-
-    <div id="env" class="envelope" title="Haz clic para abrir">
-      <div class="env-body">
-        <div class="flap"></div>
-        <div class="paper">
-          <h3>Mi carta para ti 💌</h3>
-          <p>
-            Hola mi amor, feliz día. Estoy muy feliz de estar estos 13 meses contigo.  
-            Pasó exactamente un año desde que cumplimos un mes. Todavía recuerdo ese día que estaba nervioso porque te daría tu primer detalle de primer mes. Estaba en la escuela y me pasé todo el día pensando en cómo sería.
-          </p>
-          <p>
-            Hoy, un año después, aquí estoy, volviendo a escribir y a recordar los bonitos momentos que vivimos todo ese año. Y aunque fue difícil, siento que aprendimos muchas cosas, y yo sé que este año será mejor que el anterior.
-          </p>
-          <p>
-            Con todo lo que pasamos, con todo lo que sufrimos, aprendimos, y sobre todo con todo el amor que acumulamos, sé que nos elegiremos mutuamente. Estoy muy contento de poder seguir con mi hermosa princesa.
-          </p>
-          <p>
-            Quiero cuidarte por siempre y luchar juntos para romper la distancia. 💖
-          </p>
-
-          <a class="btn" href="./">Volver</a>
-        </div>
-      </div>
-    </div>
-
+  <div class="carta">
+    <h1>💌 Hola mi amor 💌</h1>
+    <p>
+      Hola mi amor, feliz día, estoy muy feliz de estar estos 13 meses contigo.  
+      Pasó exactamente un año desde que cumplimos un mes, todavía recuerdo ese día que estaba nervioso porque te daría tu primer detalle de primer mes.  
+      Estaba en la escuela y me pasé todo el día pensando en cómo sería.  
+    </p>
+    <p>
+      Hoy, un año después aquí estoy, volviendo a escribir y a recordar los bonitos momentos que vivimos todo ese año.  
+      Y aunque fue difícil, siento que aprendimos muchas cosas.  
+      Yo sé que este año será mejor que el anterior.  
+    </p>
+    <p>
+      Con todo lo que pasamos, con todo lo que sufrimos, aprendimos, y sobre todo con todo el amor que acumulamos, sé que nos elegiremos mutuamente.  
+      Estoy muy contento de poder seguir con mi hermosa princesa.  
+      Quiero cuidarte por siempre y luchar juntos para romper la distancia.  
+    </p>
+    <button class="boton" onclick="window.location.href='timeline.html'">
+      📖 Ver nuestra línea del tiempo
+    </button>
   </div>
-</div>
-
-<script>
-  function makeHeart(x,y,dur,color,size=12){
-    const h=document.createElement('div');
-    h.className='h';
-    h.style.left=x+'vw'; h.style.top=y+'vh';
-    h.style.width=h.style.height=size+'px';
-    h.style.background=color;
-    h.style.animationDuration=dur+'ms';
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),dur);
-  }
-  function sprinkleHearts(count=8){
-    const colors=['#ffc8dd','#ffafcc','#cdb4db','#bde0fe','#a2d2ff','#ffe3f0'];
-    for(let i=0;i<count;i++){
-      const x=Math.random()*100;
-      const y=100+Math.random()*20;
-      const dur=5000+Math.random()*4500;
-      const color=colors[Math.floor(Math.random()*colors.length)];
-      const size=10+Math.random()*8;
-      setTimeout(()=>makeHeart(x,y,dur,color,size), i*60);
-    }
-  }
-  setInterval(()=>sprinkleHearts(5),1400);
-
-  const env = document.getElementById('env');
-  let opened = false;
-  env.addEventListener('click', ()=>{
-    env.classList.toggle('open');
-    if(!opened && env.classList.contains('open')){
-      opened = true;
-      for(let k=0;k<60;k++){
-        setTimeout(()=>sprinkleHearts(6), k*25);
-      }
-    }
-  });
-</script>
 </body>
 </html>
