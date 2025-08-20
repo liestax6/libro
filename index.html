@@ -3,183 +3,307 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Carta para ti 💖</title>
+<title>Carta interactiva 💖</title>
 <style>
   :root{
-    --ink:#1a1b26; --panel:rgba(255,255,255,.10); --border:rgba(255,255,255,.22);
-    --muted:#eef1f7; --pink:#ffc8dd; --pink2:#ffafcc; --purple:#cdb4db; --blue:#bde0fe; --blue2:#a2d2ff;
+    --ink:#1a1b26; --muted:#eef1f7;
+    --pink:#ffc8dd; --pink2:#ffafcc;
+    --lav:#e2d9f3; --purple:#cdb4db;
+    --blue:#bde0fe; --blue2:#a2d2ff;
+    --panel:rgba(255,255,255,.10); --border:rgba(255,255,255,.22);
+    --theme1: linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
+    --theme2: linear-gradient(135deg, #ffd6e8 0%, #d3b8ff 55%, #b1e0ff 100%);
   }
   html,body{height:100%;margin:0}
   body{
-    font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial,sans-serif;
-    color:#fff; background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
-    animation: sky 14s ease-in-out infinite alternate; overflow-x:hidden
+    font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    color:#fff; overflow-x:hidden;
+    background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
+    animation: sky 14s ease-in-out infinite alternate;
   }
   @keyframes sky{
     0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
     50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
     100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
   }
-  .wrap{max-width:920px;margin:0 auto;padding:24px}
-  header{
-    text-align:center;margin:22px auto 16px;
+  .wrap{max-width:980px;margin:0 auto;padding:22px}
+  .glass{
     background:var(--panel); border:1px solid var(--border);
-    backdrop-filter:blur(10px); box-shadow:0 24px 70px rgba(0,0,0,.35);
-    border-radius:28px; padding:22px 18px;
+    border-radius:28px; padding:22px; box-shadow:0 24px 70px rgba(0,0,0,.35);
+    backdrop-filter:blur(10px);
   }
-  .heart{
-    width:120px;height:120px;margin:0 auto 8px;position:relative;transform:rotate(45deg);
-    background: radial-gradient(circle at 30% 30%, #ffe6f0, var(--pink2) 60%);
-    box-shadow:0 0 26px rgba(255,175,204,.7),0 0 80px rgba(255,175,204,.25);
-    animation: beat 1.2s ease-in-out infinite;
+  h1{margin:6px 0 8px; font-size:clamp(1.6rem,5vw,2.6rem); font-weight:900; text-align:center; text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  .sub{margin:0 auto 12px; text-align:center; color:var(--muted)}
+  .controls{
+    display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin:6px 0 16px;
   }
-  .heart:before,.heart:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:inherit;left:-60px;top:0}
-  .heart:after{left:0;top:-60px}
-  @keyframes beat{0%,100%{transform:rotate(45deg) scale(1)}30%{transform:rotate(45deg) scale(1.06)}60%{transform:rotate(45deg) scale(1.12)}}
-  h1{margin:0 0 6px;font-size:clamp(1.6rem,5vw,2.4rem);font-weight:900;text-shadow:0 2px 12px rgba(0,0,0,.35)}
-  .type{min-height:28px;font-weight:700;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.35);letter-spacing:.3px}
-
-  /* Tarjetas */
-  .grid{display:grid;gap:16px;margin:18px 0;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-  .card{
-    background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:16px 14px;
-    box-shadow:0 14px 40px rgba(0,0,0,.3);transition:.25s;position:relative;overflow:hidden
+  .chip{
+    padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.10); color:#fff; cursor:pointer; user-select:none;
   }
-  .card:hover{transform:translateY(-2px)}
-  .card h3{margin:6px 0 6px;font-size:1.1rem}
-  .open{display:inline-block;margin-top:8px;padding:10px 14px;border-radius:12px;background:#545a71;color:#e8ecfa;text-decoration:none;font-weight:700}
-  .open[data-on="1"]{background:linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);color:#fff;box-shadow:0 10px 28px rgba(255,168,220,.35)}
-  .reveal{margin-top:10px;line-height:1.7;color:#f7f7ff;display:none}
-  .reveal.show{display:block;animation:fade .35s ease}
-  @keyframes fade{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-  /* Quiz */
-  .quiz{margin:10px 0}
+  .chip[data-active="1"]{background:var(--theme1); border-color:rgba(255,255,255,.6); box-shadow:0 8px 24px rgba(255,168,220,.35)}
+  .namebox{display:flex; gap:8px; align-items:center}
+  .namebox input{
+    padding:8px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.25);
+    background:rgba(0,0,0,.25); color:#fff; outline:none; min-width:180px;
+  }
   .btn{
-    display:inline-block;padding:10px 14px;border-radius:12px;margin:6px;cursor:pointer;
-    background:#545a71;color:#e8ecfa;border:none;font-weight:700;box-shadow:0 10px 24px rgba(0,0,0,.25)
+    display:inline-block; padding:12px 16px; border-radius:14px; font-weight:800; text-decoration:none; color:#fff;
+    background:var(--theme1); border:1px solid rgba(255,255,255,.35); box-shadow:0 10px 28px rgba(255,168,220,.35);
   }
-  .btn.good{background:linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);color:#fff}
+  /* Sobre que se abre */
+  .envelope{
+    position:relative; width:min(680px, 92vw); margin:14px auto; height:240px; cursor:pointer;
+    perspective:1000px;
+  }
+  .env-body{
+    width:100%; height:100%; position:relative; border-radius:16px; overflow:hidden;
+    background:var(--theme2); box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .flap{
+    position:absolute; inset:0; height:50%; transform-origin:top; background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.2));
+    border-bottom:1px solid rgba(255,255,255,.45);
+    transition: transform .8s ease; z-index:2;
+  }
+  .paper{
+    position:absolute; left:10%; right:10%; top:55%; height:70%; border-radius:12px; padding:16px; overflow:auto;
+    background:rgba(255,255,255,.96); color:#222; box-shadow:0 10px 30px rgba(0,0,0,.25);
+    transform: translateY(120%); transition: transform .8s ease .25s;
+  }
+  .envelope.open .flap{ transform: rotateX(-180deg); }
+  .envelope.open .paper{ transform: translateY(0%); }
+  .paper h3{margin:0 0 8px}
+  .paper p{line-height:1.7}
+  .sig{margin-top:10px; opacity:.7}
 
-  /* Footer */
-  footer{margin:18px 0 8px;text-align:center;color:#e9ecf5;opacity:.85}
+  /* Grid de secciones interactivas */
+  .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin-top:16px}
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:16px 14px;
+    box-shadow:0 14px 40px rgba(0,0,0,.3); position:relative; overflow:hidden;
+  }
+  .card h3{margin:6px 0 8px; font-size:1.1rem}
+  .reveal{display:none; margin-top:10px; animation:fade .35s ease}
+  .reveal.show{display:block}
+  @keyframes fade{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .open{margin-top:6px}
+  /* Rueda */
+  .wheel-wrap{display:grid; place-items:center}
+  .wheel{
+    width:220px; height:220px; border-radius:50%; border:8px solid rgba(255,255,255,.35);
+    background: conic-gradient(#ffd6e8 0 60deg,#d5c7ff 60deg 120deg,#bde0fe 120deg 180deg,#ffc8dd 180deg 240deg,#cdb4db 240deg 300deg,#a2d2ff 300deg 360deg);
+    box-shadow:0 10px 30px rgba(0,0,0,.25); transition: transform 2.5s cubic-bezier(.2,.8,.2,1);
+    position:relative;
+  }
+  .pointer{width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:18px solid #fff; margin-top:8px; filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+  .wheel-label{position:absolute; inset:0; display:grid; place-items:center; font-weight:900; color:#222; text-align:center; padding:10px}
+  /* Slider */
+  .slider{width:100%}
+  .out{margin-top:8px; color:var(--muted)}
+  /* Música */
+  .audio{display:flex; gap:10px; align-items:center; justify-content:center; margin-top:10px}
+  .small{font-size:.9rem; color:var(--muted)}
 
   /* Corazones flotantes */
-  .h{position:fixed;width:12px;height:12px;transform:rotate(45deg);background:#ffc8dd;box-shadow:0 0 8px rgba(255,200,221,.8);
-     opacity:.95;z-index:0;animation:floatUp linear forwards}
-  .h:before,.h:after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:inherit;left:-6px;top:0}
-  .h:after{left:0;top:-6px}
-  @keyframes floatUp{0%{transform:translateY(0) rotate(45deg) scale(1);opacity:.95}100%{transform:translateY(-110vh) rotate(45deg) scale(1.2);opacity:0}}
-
+  .h{position:fixed; width:12px; height:12px; transform:rotate(45deg); background:#ffc8dd; box-shadow:0 0 8px rgba(255,200,221,.8);
+     opacity:.95; z-index:0; animation: floatUp linear forwards}
+  .h:before,.h:after{content:""; position:absolute; width:12px; height:12px; border-radius:50%; background:inherit; left:-6px; top:0}
+  .h:after{left:0; top:-6px}
+  @keyframes floatUp{0%{transform:translateY(0) rotate(45deg) scale(1); opacity:.95}100%{transform:translateY(-110vh) rotate(45deg) scale(1.2); opacity:0}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <div class="heart" aria-hidden="true"></div>
-      <h1>Para ti, con todo mi amor</h1>
-      <div id="type" class="type"></div>
-    </header>
+    <div class="glass">
+      <h1 id="title">Para ti, con todo mi amor</h1>
+      <p class="sub">Personaliza la carta y ábrela cuando quieras 💗</p>
 
-    <section class="grid">
-      <!-- 1. Lo que amo de ti -->
-      <article class="card">
-        <h3>Lo que amo de ti</h3>
-        <button class="open" data-id="r1">Abrir</button>
-        <div id="r1" class="reveal">
-          <p>
-            Amo cómo me haces sentir en paz, tu forma de escucharme y esa risa que me salva el día.
-            Amo que seas tú, así, auténtica y brillante.
-          </p>
+      <!-- Controles -->
+      <div class="controls">
+        <div class="namebox">
+          <label for="her">Su nombre:</label>
+          <input id="her" type="text" placeholder="Escribe su nombre…">
+          <button id="applyName" class="btn" type="button">Aplicar</button>
         </div>
-      </article>
-
-      <!-- 2. Lo que deseo contigo -->
-      <article class="card">
-        <h3>Lo que deseo contigo</h3>
-        <button class="open" data-id="r2">Abrir</button>
-        <div id="r2" class="reveal">
-          <p>
-            Quiero un futuro contigo: abrazarte fuerte, cocinar juntos algo sencillo,
-            ver una película tomados de la mano y recordarnos cada día por qué nos elegimos.
-          </p>
+        <div class="namebox">
+          <span>Tema:</span>
+          <span class="chip" data-theme="pink" data-active="1">Rosa</span>
+          <span class="chip" data-theme="purple">Lila</span>
+          <span class="chip" data-theme="blue">Azul</span>
         </div>
-      </article>
+      </div>
 
-      <!-- 3. Mis promesas -->
-      <article class="card">
-        <h3>Mis promesas</h3>
-        <button class="open" data-id="r3">Abrir</button>
-        <div id="r3" class="reveal">
-          <ul>
-            <li>Cuidarte con hechos, no solo palabras.</li>
-            <li>Escucharte de verdad y ser paciente.</li>
-            <li>Hacerte sentir amada, segura y prioritaria.</li>
-            <li>Construir, no pelear: elegirnos cada día.</li>
-          </ul>
+      <!-- Música opcional -->
+      <div class="audio">
+        <button id="play" class="btn" type="button">🎵 Reproducir música</button>
+        <span class="small">*Opcional: cambia la URL de audio en el código</span>
+      </div>
+
+      <!-- Sobre -->
+      <div id="envelope" class="envelope" title="Haz clic para abrir">
+        <div class="env-body">
+          <div class="flap"></div>
+          <div class="paper">
+            <h3 id="paperTitle">Carta para <span id="herName">ti</span></h3>
+            <p>
+              Gracias por estar aquí. No traigo recuerdos complicados ni fotos,
+              traigo lo que siento hoy: que te elijo, que quiero cuidar lo nuestro
+              con hechos y paciencia, y que veo un futuro donde la distancia ya no nos separe.
+            </p>
+            <p>
+              Prometo escucharte de verdad, sorprenderte con detalles,
+              y recordarte en los días difíciles que eres mi lugar seguro.
+            </p>
+            <p class="sig">— Diego</p>
+          </div>
         </div>
-      </article>
+      </div>
 
-      <!-- 4. Mini-quiz tierno -->
-      <article class="card">
-        <h3>Pregunta sincera</h3>
-        <div class="quiz">
-          <p>¿Me permites demostrarte con hechos que puedo ser mi mejor versión contigo?</p>
-          <button class="btn" id="nope">Mmm… luego vemos</button>
-          <button class="btn good" id="ok">Sí 💗</button>
+      <!-- Secciones interactivas -->
+      <div class="grid">
+
+        <!-- A. Lo que amo de ti -->
+        <div class="card">
+          <h3>Lo que amo de ti</h3>
+          <button class="btn open" data-target="r1">Abrir</button>
+          <div id="r1" class="reveal">
+            <p>Amo la calma que me das, tu risa que me salva el día y tu forma honesta de mirar el mundo.</p>
+          </div>
         </div>
-        <div id="ans" class="reveal"></div>
-      </article>
-    </section>
 
-    <footer>— Diego</footer>
+        <!-- B. Rueda de sorpresas -->
+        <div class="card">
+          <h3>Gira la rueda de sorpresas</h3>
+          <div class="wheel-wrap">
+            <div id="wheel" class="wheel">
+              <div id="wheelLabel" class="wheel-label">Toca “Girar”</div>
+            </div>
+            <div class="pointer"></div>
+            <button id="spin" class="btn" type="button" style="margin-top:10px;">Girar</button>
+            <div id="reward" class="out"></div>
+          </div>
+        </div>
+
+        <!-- C. Reto 3 corazones -->
+        <div class="card">
+          <h3>Encuentra 3 corazones</h3>
+          <button class="btn open" data-target="r2">Iniciar</button>
+          <div id="r2" class="reveal">
+            <p>Toca la pantalla tres veces para atrapar corazones. Al lograrlo, verás un mensaje secreto ✨</p>
+            <div id="secret" class="out"></div>
+          </div>
+        </div>
+
+        <!-- D. “Qué tanto me haces feliz” -->
+        <div class="card">
+          <h3>Qué tanto me haces feliz</h3>
+          <input id="slider" class="slider" type="range" min="0" max="100" value="75">
+          <div id="meter" class="out">Mucho 💞</div>
+          <button class="btn open" data-target="r3" style="margin-top:8px;">Ver mensaje</button>
+          <div id="r3" class="reveal">
+            <p>Cualquiera que sea el número, la respuesta es la misma: contigo quiero futuro.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <script>
-    /* Máquina de escribir */
-    const phrases = [
-      "Gracias por existir.",
-      "Te elijo hoy y siempre.",
-      "Contigo quiero futuro."
-    ];
-    const box = document.getElementById('type');
-    let i=0,j=0,del=false;
-    function step(){
-      const full = phrases[i%phrases.length];
-      if(!del){ j++; box.textContent = full.slice(0,j) + " |";
-        if(j===full.length){ del=true; return setTimeout(step,1200); }
-      }else{ j--; box.textContent = full.slice(0,j) + (j?" |":"");
-        if(j===0){ del=false; i++; }
-      }
-      setTimeout(step, del?45:80);
-    }
-    step();
-
-    /* Abrir tarjetas */
-    document.querySelectorAll('.open').forEach(b=>{
-      b.addEventListener('click', ()=>{
-        const id=b.dataset.id, r=document.getElementById(id);
-        const on = r.classList.toggle('show');
-        b.setAttribute('data-on', on? "1":"0");
-        if(on) burstHearts(18);
+    /* ===== Personalización: nombre y tema ===== */
+    const herInput = document.getElementById('her');
+    const herName  = document.getElementById('herName');
+    const paperTitle = document.getElementById('paperTitle');
+    document.getElementById('applyName').addEventListener('click', ()=>{
+      const v = (herInput.value || "ti").trim();
+      herName.textContent = v;
+      paperTitle.innerHTML = 'Carta para <span id="herName">'+v+'</span>';
+      sprinkleHearts(20);
+    });
+    document.querySelectorAll('.chip').forEach(ch=>{
+      ch.addEventListener('click', ()=>{
+        document.querySelectorAll('.chip').forEach(x=>x.dataset.active="0");
+        ch.dataset.active="1";
+        const t = ch.dataset.theme;
+        if(t==='pink'){ document.documentElement.style.setProperty('--theme1','linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%)'); }
+        if(t==='purple'){ document.documentElement.style.setProperty('--theme1','linear-gradient(135deg, #f5c6ff 0%, #c79bff 55%, #b1e0ff 100%)'); }
+        if(t==='blue'){ document.documentElement.style.setProperty('--theme1','linear-gradient(135deg, #c7eaff 0%, #a9d6ff 55%, #d0baff 100%)'); }
+        sprinkleHearts(14);
       });
     });
 
-    /* Quiz */
-    const ans = document.getElementById('ans');
-    document.getElementById('ok').addEventListener('click', ()=>{
-      ans.classList.add('show');
-      ans.innerHTML = "<p>Gracias por decir que sí. Te prometo demostrarlo con hechos. 💞</p>";
-      burstHearts(40);
-    });
-    document.getElementById('nope').addEventListener('click', ()=>{
-      ans.classList.add('show');
-      ans.innerHTML = "<p>Está bien. Estoy aquí, con paciencia y cariño. 🌷</p>";
-      sprinkleHearts(10);
+    /* ===== Música (opcional) ===== */
+    const audio = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_9c10b3f1a3.mp3?filename=love-11466.mp3"); // Cambia esta URL por tu canción
+    audio.loop = true;
+    document.getElementById('play').addEventListener('click', ()=>{
+      if(audio.paused){ audio.play(); } else { audio.pause(); }
     });
 
-    /* Corazones flotantes */
+    /* ===== Sobre que se abre ===== */
+    const env = document.getElementById('envelope');
+    env.addEventListener('click', ()=>{
+      env.classList.toggle('open');
+      if(env.classList.contains('open')){ burstHearts(40); }
+    });
+
+    /* ===== Abrir tarjetas ===== */
+    document.querySelectorAll('.open').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const id = b.dataset.target;
+        const r = document.getElementById(id);
+        r.classList.toggle('show');
+        burstHearts(14);
+      });
+    });
+
+    /* ===== Rueda de sorpresas ===== */
+    const wheel = document.getElementById('wheel');
+    const wheelLabel = document.getElementById('wheelLabel');
+    const reward = document.getElementById('reward');
+    const prizes = [
+      "Vale por una noche de juegos juntos 🎮",
+      "Canción dedicada y cantada por mí 🎤",
+      "Cita virtual con película y snacks 🍿",
+      "Carta sorpresa otro día 💌",
+      "Un poema improvisado de 10 líneas ✍️",
+      "Un día entero de cumplidos para ti 🌸"
+    ];
+    document.getElementById('spin').addEventListener('click', ()=>{
+      const turns = 720 + Math.floor(Math.random()*360); // 2 vueltas + aleatorio
+      wheel.style.transform = `rotate(${turns}deg)`;
+      const idx = Math.floor(((turns % 360) / 60)); // 6 sectores de 60°
+      setTimeout(()=>{
+        const gift = prizes[(6 - idx) % 6];
+        wheelLabel.textContent = "¡Listo!";
+        reward.textContent = "Sorpresa: " + gift;
+        burstHearts(30);
+      }, 2600);
+    });
+
+    /* ===== Reto 3 corazones ===== */
+    let caught = 0;
+    document.getElementById('r2').addEventListener('click', ()=>{
+      caught++;
+      if(caught >= 3){
+        document.getElementById('secret').innerHTML = "Mensaje secreto: Gracias por elegirme. Yo te elijo hoy y siempre. 💖";
+        burstHearts(50);
+        caught = 0;
+      } else {
+        sprinkleHearts(6);
+      }
+    });
+
+    /* ===== Slider felicidad ===== */
+    const slider = document.getElementById('slider');
+    const meter  = document.getElementById('meter');
+    slider.addEventListener('input', ()=>{
+      const v = +slider.value;
+      const text = v<25? "Siempre": v<50? "Muchísimo": v<75? "Mucho 💞": "Infinito 💘";
+      meter.textContent = text;
+    });
+
+    /* ===== Corazones flotantes y confeti ===== */
     function makeHeart(x,y,dur,color,size=12){
       const h=document.createElement("div");
       h.className="h";
@@ -192,16 +316,17 @@
     }
     function sprinkleHearts(count=8){
       const colors=["#ffc8dd","#ffafcc","#cdb4db","#bde0fe","#a2d2ff","#ffe3f0"];
-      for(let k=0;k<count;k++){
-        const x=Math.random()*100, y=100+Math.random()*20;
+      for(let i=0;i<count;i++){
+        const x=Math.random()*100;
+        const y=100+Math.random()*20;
         const dur=5000+Math.random()*4500;
         const color=colors[Math.floor(Math.random()*colors.length)];
         const size=10+Math.random()*8;
-        setTimeout(()=>makeHeart(x,y,dur,color,size), k*60);
+        setTimeout(()=>makeHeart(x,y,dur,color,size), i*60);
       }
     }
     function burstHearts(n){ sprinkleHearts(n); }
-    setInterval(()=>sprinkleHearts(6), 1400);
+    setInterval(()=>sprinkleHearts(5), 1400);
   </script>
 </body>
 </html>
