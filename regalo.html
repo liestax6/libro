@@ -1,87 +1,228 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tu regalo especial 🎁</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top, #ffafcc, #a2d2ff);
-      margin: 0;
-      padding: 0;
-      color: #fff;
-      text-align: center;
-    }
-    h1 {
-      margin-top: 30px;
-    }
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      max-width: 400px;
-      margin: 40px auto;
-    }
-    .option {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .option:hover {
-      transform: scale(1.05);
-      background: rgba(255, 255, 255, 0.25);
-    }
-    .option h2 {
-      margin: 0;
-      font-size: 20px;
-      color: #fff;
-    }
-    .option p {
-      margin: 5px 0 0;
-      font-size: 14px;
-      color: #f1f1f1;
-    }
-    .message {
-      margin-top: 40px;
-      font-size: 16px;
-      color: #fff;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tu regalo especial 🎁</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --panel: rgba(255,255,255,.14);
+    --border: rgba(255,255,255,.25);
+    --pink:#ffc8dd; --purple:#cdb4db; --blue:#a2d2ff; --green:#22c55e; --ink:#1a1b26;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:#fff; text-align:center; background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
+    animation: sky 14s ease-in-out infinite alternate; padding:18px;
+  }
+  @keyframes sky{
+    0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
+    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
+    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
+  }
+  h1{margin:6px 0 4px;font-size:clamp(1.5rem,5vw,2.2rem);font-weight:800;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  .sub{opacity:.92;margin:0 0 16px}
+
+  .grid{
+    width:min(960px,96vw);
+    margin:0 auto;
+    display:grid; gap:14px;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  }
+  .card{
+    position:relative; background:var(--panel); border:1px solid var(--border);
+    border-radius:18px; padding:12px; backdrop-filter:blur(10px);
+    box-shadow:0 14px 40px rgba(0,0,0,.35);
+    cursor:pointer; transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    outline: none;
+  }
+  .card:hover{ transform: translateY(-2px); }
+  .thumb{
+    aspect-ratio: 1 / 1; border-radius:12px; overflow:hidden; background:#0f1117; border:1px solid rgba(255,255,255,.18);
+  }
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .title{margin:10px 0 0;font-weight:800}
+  .desc{margin:2px 0 0;opacity:.9;font-size:.92rem}
+
+  /* Estado seleccionado */
+  .card.selected{
+    border-color: rgba(34,197,94,.9);
+    box-shadow: 0 0 0 3px rgba(34,197,94,.35), 0 16px 50px rgba(0,0,0,.45);
+  }
+  .check{
+    position:absolute; top:10px; right:10px;
+    width:28px; height:28px; border-radius:999px;
+    background: rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.6);
+    display:grid; place-items:center; font-size:16px; opacity:.0; transform:scale(.6);
+    transition:opacity .15s ease, transform .15s ease;
+  }
+  .card.selected .check{
+    background: var(--green); border-color: rgba(255,255,255,.9);
+    opacity:1; transform:scale(1);
+  }
+
+  .controls{margin:18px 0 4px}
+  button.confirm{
+    appearance:none; border:none; border-radius:14px; font-weight:800;
+    padding:12px 18px; cursor:pointer; color:#0b1512; background:#7de3a5;
+    box-shadow:0 10px 24px rgba(0,0,0,.35);
+    transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+  }
+  button.confirm:disabled{
+    opacity:.55; cursor:not-allowed; filter:grayscale(30%);
+  }
+  button.confirm:not(:disabled):hover{ transform: translateY(-1px); }
+
+  /* Mensaje de confirmado + brillo verde */
+  .toast{
+    margin:12px auto 0; width:min(760px,92vw);
+    background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.45);
+    color:#d1fae5; padding:12px 14px; border-radius:14px; display:none;
+  }
+  .card.confirmed{
+    animation: glow 900ms ease-out 1;
+    box-shadow: 0 0 0 4px rgba(34,197,94,.45), 0 18px 60px rgba(0,0,0,.5);
+  }
+  @keyframes glow{
+    0%  { box-shadow: 0 0 0 0 rgba(34,197,94,.0), 0 14px 40px rgba(0,0,0,.35) }
+    40% { box-shadow: 0 0 0 10px rgba(34,197,94,.35), 0 18px 60px rgba(0,0,0,.5) }
+    100%{ box-shadow: 0 0 0 4px rgba(34,197,94,.45), 0 18px 60px rgba(0,0,0,.5) }
+  }
+
+  /* Corazoncitos al confirmar */
+  .h{position:fixed;width:10px;height:10px;transform:rotate(45deg);
+     background:#7de3a5; box-shadow:0 0 8px rgba(125,227,165,.8);
+     opacity:.95; z-index:9; animation:floatUp linear forwards}
+  .h:before,.h:after{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:inherit;left:-5px;top:0}
+  .h:after{left:0;top:-5px}
+  @keyframes floatUp{
+    0%{transform:translateY(0) rotate(45deg) scale(1);opacity:.95}
+    100%{transform:translateY(-120vh) rotate(45deg) scale(1.2);opacity:0}
+  }
+</style>
 </head>
 <body>
-  <h1>🎁 Elige tu regalo, mi amor 💖</h1>
-  <p>Con mucho cariño preparé estas opciones para ti, escoge la que más te guste ✨</p>
 
-  <div class="options">
-    <div class="option" onclick="selectGift('Un ramo de flores 🌹')">
-      <h2>Un ramo de flores 🌹</h2>
-      <p>Un detalle clásico, lleno de amor y ternura.</p>
-    </div>
-    <div class="option" onclick="selectGift('Un peluche 🧸')">
-      <h2>Un peluche 🧸</h2>
-      <p>Para que me abraces aunque estemos lejos.</p>
-    </div>
-    <div class="option" onclick="selectGift('Un collar 💎')">
-      <h2>Un collar 💎</h2>
-      <p>Un detalle especial para recordarnos siempre.</p>
-    </div>
-    <div class="option" onclick="selectGift('Una carta escrita a mano ✍️')">
-      <h2>Una carta escrita a mano ✍️</h2>
-      <p>Llena de palabras que salen desde mi corazón.</p>
-    </div>
+  <h1>🎁 Elige tu regalo, mi amor</h1>
+  <p class="sub">Toca una opción para seleccionarla y luego confirma 💖</p>
+
+  <div class="grid" id="grid">
+    <!-- Opción 1 -->
+    <article class="card" data-id="op1" tabindex="0">
+      <div class="check">✓</div>
+      <figure class="thumb">
+        <img src="opcion 1.png" alt="Peluche Makka Pakka">
+      </figure>
+      <div class="title">Peluche Makka Pakka 🧸✨</div>
+      <div class="desc">Tu personaje favorito para abrazarte cuando me extrañes.</div>
+    </article>
+
+    <!-- Opción 2 -->
+    <article class="card" data-id="op2" tabindex="0">
+      <div class="check">✓</div>
+      <figure class="thumb">
+        <img src="snupi.png" alt="Peluche de Snoopy">
+      </figure>
+      <div class="title">Peluche de Snoopy 🐶</div>
+      <div class="desc">Un clásico tierno para acompañarte cada noche.</div>
+    </article>
+
+    <!-- Opción 3 -->
+    <article class="card" data-id="op3" tabindex="0">
+      <div class="check">✓</div>
+      <figure class="thumb">
+        <img src="robux.png" alt="Robux para Roblox">
+      </figure>
+      <div class="title">Robux para Roblox 🎮💎</div>
+      <div class="desc">Para que compres lo que quieras y juguemos felices.</div>
+    </article>
+
+    <!-- Opción 4 -->
+    <article class="card" data-id="op4" tabindex="0">
+      <div class="check">✓</div>
+      <figure class="thumb">
+        <img src="lala looplsi.png" alt="Lalaloopsy">
+      </figure>
+      <div class="title">Lalaloopsy 🌸</div>
+      <div class="desc">Una muñequita linda como tú.</div>
+    </article>
   </div>
 
-  <p class="message" id="message"></p>
+  <div class="controls">
+    <button id="confirm" class="confirm" type="button" disabled>✅ Confirmar regalo</button>
+  </div>
+  <div id="toast" class="toast"></div>
 
-  <script>
-    function selectGift(gift) {
-      document.getElementById("message").innerText = 
-        "Elegiste: " + gift + " 💖 Muy pronto estará en tus manos.";
+<script>
+  // Manejo de selección
+  const cards = Array.from(document.querySelectorAll('.card'));
+  const btnConfirm = document.getElementById('confirm');
+  const toast = document.getElementById('toast');
+  let selected = null;
+
+  // Restaurar selección si existía
+  const saved = localStorage.getItem('giftChoice');
+  if(saved){
+    const found = cards.find(c=>c.dataset.id === saved);
+    if(found){ setSelected(found, false); }
+  }
+
+  cards.forEach(card=>{
+    card.addEventListener('click', ()=> setSelected(card, true));
+    card.addEventListener('keypress', (e)=>{ if(e.key==='Enter' || e.key===' ') setSelected(card, true); });
+  });
+
+  function setSelected(card, focus){
+    cards.forEach(c=> c.classList.remove('selected','confirmed'));
+    card.classList.add('selected');
+    selected = card.dataset.id;
+    btnConfirm.disabled = false;
+    if(focus) card.focus();
+  }
+
+  btnConfirm.addEventListener('click', ()=>{
+    if(!selected) return;
+
+    // Guardar
+    localStorage.setItem('giftChoice', selected);
+
+    // Animación verde en la elegida
+    const chosen = cards.find(c=>c.dataset.id===selected);
+    chosen.classList.add('confirmed');
+
+    // Mensaje
+    const name = chosen.querySelector('.title').textContent.trim();
+    toast.style.display = 'block';
+    toast.textContent = `¡Listo! Elegiste: ${name} 💖 Muy pronto estará contigo.`;
+
+    // Corazoncitos verdes de celebración
+    for(let k=0;k<70;k++){
+      setTimeout(()=>sprinkleHearts(6), k*18);
     }
-  </script>
+  });
+
+  function makeHeart(x,y,dur,color='#7de3a5',size=10){
+    const h=document.createElement('div');
+    h.className='h';
+    h.style.left=x+'vw'; h.style.top=y+'vh';
+    h.style.width=h.style.height=size+'px';
+    h.style.background=color;
+    h.style.animationDuration=dur+'ms';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),dur);
+  }
+  function sprinkleHearts(count=8){
+    for(let i=0;i<count;i++){
+      const x=Math.random()*100;
+      const y=100+Math.random()*10;
+      const dur=4000+Math.random()*3000;
+      const size=8+Math.random()*6;
+      setTimeout(()=>makeHeart(x,y,dur), i*40);
+    }
+  }
+</script>
 </body>
 </html>
