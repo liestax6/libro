@@ -1,199 +1,96 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nuestra línea del tiempo ✨</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --panel:rgba(255,255,255,.14); --border:rgba(255,255,255,.25);
-    --pink:#ffc8dd; --purple:#cdb4db; --blue2:#a2d2ff; --muted:#eef1f7;
-  }
-  *{box-sizing:border-box} html,body{height:100%;margin:0}
-  body{
-    font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:#fff;
-    background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
-    animation:sky 14s ease-in-out infinite alternate;
-  }
-  @keyframes sky{
-    0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
-    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
-    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
-  }
-  header{max-width:1100px;margin:0 auto;padding:22px 16px 4px;text-align:center}
-  h1{margin:0 0 8px;font-weight:800;font-size:clamp(1.5rem,6vw,2.6rem);text-shadow:0 2px 12px rgba(0,0,0,.35)}
-  .sub{margin:0 0 14px;color:var(--muted);opacity:.9}
-
-  .wrap{max-width:1100px;margin:0 auto;padding:0 14px 22px}
-  .chipbar{
-    display:flex;gap:10px;overflow:auto;padding:10px;border-radius:18px;
-    background:var(--panel); border:1px solid var(--border); backdrop-filter:blur(10px);
-    box-shadow:0 18px 60px rgba(0,0,0,.35);
-  }
-  .chip{
-    flex:0 0 auto; padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:700;
-    color:#1b1d29; background:linear-gradient(135deg,#ffe0ef 0%,#d7c7f0 55%,#cfe2ff 100%);
-    border:1px solid rgba(255,255,255,.6); box-shadow:0 6px 18px rgba(0,0,0,.2);
-    white-space:nowrap; user-select:none;
-  }
-  .chip.active{outline:3px solid rgba(255,255,255,.6)}
-
-  .board{
-    margin-top:14px; border-radius:24px; padding:0;
-    background:var(--panel); border:1px solid var(--border); backdrop-filter:blur(10px);
-    box-shadow:0 24px 70px rgba(0,0,0,.45);
-  }
-  .board-header{
-    display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.2)
-  }
-  .back{
-    padding:10px 16px;border-radius:999px;font-weight:800;cursor:pointer;text-decoration:none;color:#fff;
-    background:linear-gradient(135deg,#ffc8dd 0%,#cdb4db 55%,#a2d2ff 100%); border:1px solid rgba(255,255,255,.45);
-    box-shadow:0 12px 30px rgba(255,168,220,.35)
-  }
-  .title{font-weight:800;font-size:clamp(1.05rem,4.6vw,1.4rem)}
-  .date{opacity:.9;color:var(--muted)}
-
-  .card{
-    display:grid; gap:12px; grid-template-columns:1fr; padding:14px 16px 18px;
-  }
-  @media (min-width: 860px){
-    .card{grid-template-columns:1.1fr 1fr}
-  }
-  .media{
-    border-radius:16px; overflow:hidden; background:#0f1117; border:1px solid rgba(255,255,255,.2);
-    min-height:240px; display:grid; place-items:center;
-  }
-  .media img, .media video{width:100%; height:auto; display:block}
-  .text{
-    border-radius:16px; padding:14px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
-    font-size:1.05rem; line-height:1.8;
-  }
-
-  .footer-cta{display:flex;justify-content:center;padding:18px}
-  .cta{
-    padding:14px 18px;border-radius:16px;font-weight:800;text-decoration:none;color:#fff; text-align:center; width:min(560px,92vw);
-    background:linear-gradient(135deg,#ffc8dd 0%,#cdb4db 55%,#a2d2ff 100%); border:1px solid rgba(255,255,255,.45);
-    box-shadow:0 12px 30px rgba(255,168,220,.35)
-  }
-  .mutedWarn{color:#fee;opacity:.9;text-align:center;margin:10px 0}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra historia - Línea del tiempo</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #ffc8dd, #cdb4db, #a2d2ff);
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    .timeline {
+      margin: 30px auto;
+      max-width: 800px;
+      text-align: left;
+    }
+    .event {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .event img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .boton {
+      display: inline-block;
+      margin: 40px auto;
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(45deg, #ff758f, #ffb347);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+    .boton:hover {
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
+  <h1>✨ Nuestra línea del tiempo ✨</h1>
+  <p>Un recorrido por nuestros recuerdos más bonitos 💖</p>
 
-<header>
-  <h1>Nuestra línea del tiempo</h1>
-  <p class="sub">✨ Toca un evento y verás sus fotos y texto juntos. 💖</p>
-</header>
-
-<div class="wrap">
-  <!-- barra de chips -->
-  <div id="chipbar" class="chipbar"></div>
-
-  <!-- tablero principal -->
-  <section class="board">
-    <div class="board-header">
-      <a class="back" href="carta.html">Atrás</a>
-      <div>
-        <div id="hTitle" class="title">Selecciona un recuerdo</div>
-        <div id="hDate" class="date">—</div>
-      </div>
+  <div class="timeline">
+    <div class="event">
+      <h2>Primera carta que te escribí</h2>
+      <p>Recuerdo de la primera vez que te escribí una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien.</p>
+      <img src="IMG-20250819-WA0029.jpg" alt="Primera carta que le escribí">
     </div>
 
-    <div class="card">
-      <div class="media" id="media"></div>
-      <div class="text" id="text">
-        Aquí aparecerán todas las tarjetas con imagen + texto, sin tener que abrir una por una. 🌟
-      </div>
+    <div class="event">
+      <h2>Tu primera carta para mí</h2>
+      <p>Esta fue la primera vez que me escribiste una carta, poquito después de que te pidiera ser mi novia. Sentí muy bonito al leerla y amé que nuestros sentimientos fueran mutuos.</p>
+      <img src="IMG-20250819-WA0024.jpg" alt="Primera carta de ella">
     </div>
 
-    <div class="footer-cta">
-      <a class="cta" href="index.html">🎁 Ir a elegir mi regalo</a>
+    <div class="event">
+      <h2>Las primeras flores</h2>
+      <p>Estas fueron las primeras flores que te di. Estaba muy nervioso porque no sabía cómo enviarte y si te gustarían. Fue la primera vez que enviaba algo a tu casa, y aunque fue difícil, lo logré. Sé que en el futuro te daré muchas más flores mi amor.</p>
+      <img src="IMG-20250819-WA0028.jpg" alt="Primeras flores">
     </div>
-  </section>
-</div>
 
-<script>
-/* Si luego mueves archivos a /img, cambia a "img/" */
-const basePath = "";
+    <div class="event">
+      <h2>El día más feliz de mi vida</h2>
+      <p>Ese día conocí al amor de mi vida. Cuando te abracé me sentí en el cielo, fue increíble por fin verte en persona. Me enamoré aún más de lo que ya estaba. Cumplimos nuestra primera meta juntos. 💕</p>
+      <img src="IMG-20250819-WA0030.jpg" alt="Primer abrazo">
+    </div>
 
-/* Tus recuerdos */
-const items = [
-  {
-    fecha: "19 Ago 2025",
-    titulo: "Mi primera carta para ti",
-    texto: "Recuerdo de la primera vez que te escribí una carta, mi amor. Estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien.",
-    src: basePath + "IMG-20250819-WA0029.jpg", type: "img"
-  },
-  {
-    fecha: "19 Ago 2025",
-    titulo: "Tu primera carta para mí",
-    texto: "Esta fue la primera vez que me escribiste una carta. Me lo escribiste poquito después de que te pidiera ser mi novia. Sentí muy bonito al leerla y amé que nuestros sentimientos fueran mutuos.",
-    src: basePath + "IMG-20250819-WA0024.jpg", type: "img"
-  },
-  {
-    fecha: "19 Ago 2025",
-    titulo: "Tus primeras flores",
-    texto: "Estas fueron las primeras flores que te di. Estaba muy nervioso porque no sabía cómo enviarte, no sabía si te iban a gustar; además era la primera vez que enviaba algo a tu casa. Espero que te hayan gustado, porque sé que en el futuro te daré muchas más flores, mi amor.",
-    src: basePath + "IMG-20250819-WA0028.jpg", type: "img"
-  },
-  {
-    fecha: "19 Ago 2025",
-    titulo: "El día que nos vimos",
-    texto: "Este fue el día más feliz de mi vida: conocí al amor de mi vida y cuando te abracé me sentí en el cielo. Amé mucho ese día porque por fin pude verte en persona y me enamoré mucho más de lo que ya estaba. Me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta.",
-    src: basePath + "IMG-20250819-WA0030.jpg", type: "img"
-  },
-  {
-    fecha: "14 Ago 2025",
-    titulo: "Amo tus detalles",
-    texto: "Amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito. Amo cada dibujo, cada carta; todo de ti me vuelve loco, mi amor.",
-    src: basePath + "IMG-20250814-WA0003.jpg", type: "img"
-  }
-];
+    <div class="event">
+      <h2>Tus detalles</h2>
+      <p>Amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas tu tiempo para escribirme algo bonito. Amo cada dibujo, cada carta, todo de ti me vuelve loco mi amor.</p>
+      <img src="IMG-20250814-WA0005.jpg" alt="Detalles de ella">
+    </div>
+  </div>
 
-/* Render chips */
-const chipbar = document.getElementById('chipbar');
-items.forEach((it, i)=>{
-  const chip = document.createElement('button');
-  chip.className = 'chip';
-  chip.type = 'button';
-  chip.textContent = `${it.fecha} · ${it.titulo}`;
-  chip.addEventListener('click', ()=>select(i));
-  chipbar.appendChild(chip);
-});
+  <!-- Botón para ir al regalo -->
+  <a href="regalo.html" class="boton">🎁 Ir a elegir mi regalo</a>
 
-/* Select function (con fallback si la imagen no existe) */
-const hTitle = document.getElementById('hTitle');
-const hDate  = document.getElementById('hDate');
-const media  = document.getElementById('media');
-const textEl = document.getElementById('text');
-
-function select(i){
-  // activar chip
-  [...chipbar.children].forEach((c,idx)=>c.classList.toggle('active', idx===i));
-
-  const it = items[i];
-  hTitle.textContent = it.titulo;
-  hDate.textContent  = it.fecha;
-  textEl.textContent = it.texto;
-
-  if(it.type === 'img'){
-    media.innerHTML = `<img id="pic" alt="${it.titulo}">`;
-    const pic = document.getElementById('pic');
-    pic.onerror = ()=>{
-      media.innerHTML = `<div class="mutedWarn">No se pudo cargar <b>${it.src}</b>. Verifica el nombre o carpeta.</div>`;
-    };
-    pic.src = it.src;
-  }else if(it.type === 'video'){
-    media.innerHTML = `<video controls src="${it.src}"></video>`;
-  }
-}
-
-/* Autoseleccionar el primero para que no quede vacío */
-if(items.length){
-  select(0);
-}
-</script>
 </body>
 </html>
