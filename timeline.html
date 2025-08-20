@@ -9,8 +9,8 @@
 <style>
   :root{
     --ink:#1a1b26; --muted:#e9ecf6;
-    --pink:#ffc8dd; --purple:#cdb4db; --blue:#bde0fe; --blue2:#a2d2ff;
-    --panel:rgba(255,255,255,.10); --border:rgba(255,255,255,.22);
+    --pink:#ffc8dd; --blue2:#a2d2ff;
+    --panel:rgba(255,255,255,.08); --border:rgba(255,255,255,.22);
     --glow:0 18px 60px rgba(0,0,0,.45);
   }
   *{box-sizing:border-box}
@@ -18,20 +18,18 @@
   body{
     font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;
     color:#fff; background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
-    animation: sky 14s ease-in-out infinite alternate;
-    padding:16px;
+    animation: sky 14s ease-in-out infinite alternate; padding:16px;
   }
   @keyframes sky{
     0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
     50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
     100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
   }
-
   header{max-width:1100px;margin:0 auto 12px;text-align:center}
   h1{margin:6px 0 2px; font-weight:900; font-size:clamp(1.5rem,5.2vw,2.4rem); text-shadow:0 2px 12px rgba(0,0,0,.35)}
   .sub{margin:0 0 12px; color:var(--muted)}
 
-  .wrap{max-width:1100px;margin:0 auto; display:grid; gap:14px; grid-template-columns: 1fr; }
+  .wrap{max-width:1100px;margin:0 auto; display:grid; gap:14px; grid-template-columns:1fr}
   @media(min-width:900px){ .wrap{grid-template-columns: 420px 1fr; align-items:start} }
 
   .panel{
@@ -42,20 +40,19 @@
   .event{
     border:1px solid rgba(255,255,255,.18);
     border-radius:16px; padding:12px 12px 14px; margin:10px 0;
-    background:rgba(255,255,255,.06);
+    background:rgba(255,255,255,.05);
     cursor:pointer; transition:.2s; position:relative;
   }
   .event:hover{transform:translateY(-2px)}
   .date{opacity:.85; font-size:.9rem; margin-bottom:4px}
   .title{font-weight:800}
   .excerpt{opacity:.95; margin-top:6px}
-
   .dot{
     position:absolute; right:-10px; top:14px; width:14px; height:14px; border-radius:50%;
     background:linear-gradient(135deg, var(--pink), var(--blue2)); box-shadow:0 0 0 4px rgba(255,255,255,.12);
   }
 
-  .right{padding:0; overflow:hidden}
+  .right{overflow:hidden}
   .viewer-head{
     display:flex; align-items:center; gap:10px; padding:12px 14px;
     border-bottom:1px solid rgba(255,255,255,.15)
@@ -68,15 +65,29 @@
   .viewer-body{padding:14px; min-height:300px}
   .viewer-title{margin:4px 0 2px; font-weight:900}
   .viewer-date{opacity:.85}
-  .viewer-text{margin-top:10px; line-height:1.7; color:#fff}
-  .viewer-img{
-    display:block; max-width:100%; border-radius:14px; margin:10px auto 0; box-shadow:0 12px 30px rgba(0,0,0,.35)
+  .viewer-text{margin-top:10px; line-height:1.7}
+
+  /* Galería */
+  .gallery{margin-top:12px; display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px}
+  .thumb{
+    width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:12px;
+    box-shadow:0 10px 24px rgba(0,0,0,.35); cursor:pointer; transition:.2s
+  }
+  .thumb:hover{transform:translateY(-2px)}
+
+  /* Lightbox */
+  .lightbox{
+    position:fixed; inset:0; background:rgba(0,0,0,.85); display:none; place-items:center; z-index:50;
+  }
+  .lightbox.open{display:grid}
+  .lightbox img{max-width:92vw; max-height:86vh; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.6)}
+  .close{
+    position:fixed; top:14px; right:14px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.6);
+    color:#fff; font-weight:900; border-radius:999px; padding:8px 14px; cursor:pointer
   }
 
-  /* Botón final para ir al regalo */
-  .footer{
-    max-width:1100px; margin:18px auto 0; text-align:center;
-  }
+  /* Botón final */
+  .footer{max-width:1100px; margin:18px auto 0; text-align:center}
   .cta{
     display:inline-block; margin-top:10px; padding:12px 20px; border-radius:14px; font-weight:900;
     color:#fff; text-decoration:none; letter-spacing:.2px;
@@ -93,10 +104,10 @@
   </header>
 
   <main class="wrap">
-    <!-- LISTA IZQUIERDA -->
+    <!-- LISTA -->
     <section id="list" class="panel left"></section>
 
-    <!-- VISOR DERECHO -->
+    <!-- VISOR -->
     <section class="panel right">
       <div class="viewer-head">
         <a class="back" href="./carta.html">Atrás</a>
@@ -106,50 +117,58 @@
         </div>
       </div>
       <div class="viewer-body">
-        <div id="vText" class="viewer-text">Aquí verás el texto completo, sin cortes. 💖</div>
-        <img id="vImg" class="viewer-img" src="" alt="" style="display:none">
+        <div id="vText" class="viewer-text">Aquí verás el texto completo y, si hay, sus fotitos. 💖</div>
+        <div id="gallery" class="gallery"></div>
       </div>
     </section>
   </main>
 
-  <!-- Botón al FINAL para ir a la página de regalos -->
+  <!-- Botón al FINAL para ir al regalo -->
   <div class="footer">
     <a class="cta" href="./regalo.html">🎁 Ir a elegir mi regalo</a>
   </div>
 
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <img id="bigImg" alt="">
+    <button class="close" onclick="closeLightbox()">Cerrar ✖</button>
+  </div>
+
 <script>
 /* ========= EDITA AQUÍ TUS RECUERDOS =========
-   Puedes poner texto largo sin problema. Opcional: propiedad "img". */
+   - Usa img: "ruta.jpg" para una imagen
+   - o imgs: ["a.jpg","b.jpg"] para varias
+   (Sube los archivos a /img/ o donde prefieras y actualiza las rutas) */
 const timeline = [
   {
     date: "30 Jul 2024",
     title: "Mi primera carta para ti",
-    text: `La primera vez que te escribí, con mil nervios y el corazón lleno.
-    (Recuerdo de la primera vez que te escribir una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien).`
+    text: `Recuerdo de la primera vez que te escribir una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien.`,
+    imgs: ["IMG-20250819-WA0029.jpg"]          // ← cambia por tus rutas
   },
   {
     date: "22 Jul 2024",
     title: "Tu primera carta para mí",
-    text: `Ese mensaje tuyo que me hizo sentir elegido.
-    (Pega aquí el texto completo o un resumen).`
+    text: `Esta fue la primera vez que me escribiste una carta, me lo escribiste poquito despues de que te pidiera ser mi novia, senti muy bonito al leerla y ame que nuestros sentimientos fueran mutuos.`,
+    imgs: ["IMG-20250819-WA0024.jpg"]
   },
   {
     date: "12 May 2025",
     title: "La primera vez que nos vimos",
-    text: `Ese día en que te tuve enfrente y todo se acomodó.
-    (Pega aquí tu relato de ese momento).`
+    text: `Este fue el dia mas feliz de mi vida, conocí al amor de mi vida y cuando te abrace me senti en el cielo, ame mucho ese dia porque porfin pude verte en persona y me enamore mucho mas de lo que ya estaba, me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta.`,
+    img: "IMG-20250819-WA0030.jpg"
   },
   {
     date: "20 Jul 2025",
     title: "Las primeras flores que te di",
-    text: `El primer ramo que te envié/entregué y lo que sentí al hacerlo.
-    (Pega aquí los detalles).`
+    text: `Estas fueron las primeras flores que te di, estaba muy nervioso porque no sabía como enviarte, no sabía si te iban a gustar además que era la primera vez que enviaba algo a tu casa, espero que te hayan gustado porque se que en el futuro te daré muchas mas flores mi amor.`,
+    imgs: ["IMG-20250819-WA0028.jpg"]
   },
   {
-    date: "", // sin fecha
+    date: "",
     title: "Tus cartas y dibujos",
-    text: `No tienen fecha porque llegan seguido. Gracias por cada detalle que me haces.
-    (Puedes pegar algo más aquí).`
+    text: `amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito, amor cada dibujo, cada carta, todo de ti me vuelve loco mi amor.`,
+    imgs: ["IMG-20250814-WA0003.jpg","IMG-20250814-WA0005.jpg"]
   }
 ];
 
@@ -157,7 +176,7 @@ const $list = document.getElementById('list');
 const $vTitle = document.getElementById('vTitle');
 const $vDate  = document.getElementById('vDate');
 const $vText  = document.getElementById('vText');
-const $vImg   = document.getElementById('vImg');
+const $gallery= document.getElementById('gallery');
 
 function renderList() {
   $list.innerHTML = "";
@@ -178,20 +197,40 @@ function renderList() {
 function openEvent(i){
   const ev = timeline[i];
   $vTitle.textContent = ev.title;
-  $vDate.textContent = ev.date || "Sin fecha";
-  $vText.innerHTML = sanitize(ev.text).replace(/\n/g, "<br>");
-  if(ev.img){
-    $vImg.src = ev.img;
-    $vImg.style.display = 'block';
-  } else {
-    $vImg.style.display = 'none';
-  }
+  $vDate.textContent  = ev.date || "Sin fecha";
+  $vText.innerHTML    = sanitize(ev.text).replace(/\n/g, "<br>");
+
+  // Render galería
+  $gallery.innerHTML = "";
+  const imgs = Array.isArray(ev.imgs) ? ev.imgs : (ev.img ? [ev.img] : []);
+  imgs.forEach(src=>{
+    const img = document.createElement('img');
+    img.src = src; img.className = 'thumb'; img.alt = ev.title;
+    img.addEventListener('click', ()=> openLightbox(src));
+    $gallery.appendChild(img);
+  });
 }
 
-// Evita que HTML incrustado rompa el layout
 function sanitize(str=""){
   return str.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
 }
+
+/* Lightbox */
+const $lightbox = document.getElementById('lightbox');
+const $bigImg   = document.getElementById('bigImg');
+function openLightbox(src){
+  $bigImg.src = src;
+  $lightbox.classList.add('open');
+  $lightbox.setAttribute('aria-hidden','false');
+}
+function closeLightbox(){
+  $lightbox.classList.remove('open');
+  $lightbox.setAttribute('aria-hidden','true');
+  $bigImg.src = "";
+}
+$lightbox.addEventListener('click', e=>{
+  if(e.target === $lightbox) closeLightbox();
+});
 
 renderList();
 </script>
