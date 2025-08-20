@@ -1,332 +1,91 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Carta interactiva 💖</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cuenta regresiva 💖</title>
 <style>
   :root{
     --ink:#1a1b26; --muted:#eef1f7;
     --pink:#ffc8dd; --pink2:#ffafcc;
     --lav:#e2d9f3; --purple:#cdb4db;
     --blue:#bde0fe; --blue2:#a2d2ff;
-    --panel:rgba(255,255,255,.10); --border:rgba(255,255,255,.22);
-    --theme1: linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
-    --theme2: linear-gradient(135deg, #ffd6e8 0%, #d3b8ff 55%, #b1e0ff 100%);
   }
   html,body{height:100%;margin:0}
   body{
     font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial, sans-serif;
-    color:#fff; overflow-x:hidden;
-    background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
+    color:#fff; overflow:hidden;
+    background: radial-gradient(1200px 600px at 50% -15%, var(--lav), var(--ink));
     animation: sky 14s ease-in-out infinite alternate;
+    display:grid; place-items:center; padding:20px;
   }
   @keyframes sky{
-    0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
-    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
-    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
+    0% { background: radial-gradient(1200px 600px at 50% -15%, var(--lav), var(--ink)); }
+    50%{ background: radial-gradient(1200px 600px at 50% -15%, var(--pink), #171825); }
+    100%{background: radial-gradient(1200px 600px at 50% -15%, var(--blue), #14151f);}
   }
-  .wrap{max-width:980px;margin:0 auto;padding:22px}
-  .glass{
-    background:var(--panel); border:1px solid var(--border);
-    border-radius:28px; padding:22px; box-shadow:0 24px 70px rgba(0,0,0,.35);
-    backdrop-filter:blur(10px);
-  }
-  h1{margin:6px 0 8px; font-size:clamp(1.6rem,5vw,2.6rem); font-weight:900; text-align:center; text-shadow:0 2px 12px rgba(0,0,0,.35)}
-  .sub{margin:0 auto 12px; text-align:center; color:var(--muted)}
-  .controls{
-    display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin:6px 0 16px;
-  }
-  .chip{
-    padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.25);
-    background:rgba(255,255,255,.10); color:#fff; cursor:pointer; user-select:none;
-  }
-  .chip[data-active="1"]{background:var(--theme1); border-color:rgba(255,255,255,.6); box-shadow:0 8px 24px rgba(255,168,220,.35)}
-  .namebox{display:flex; gap:8px; align-items:center}
-  .namebox input{
-    padding:8px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.25);
-    background:rgba(0,0,0,.25); color:#fff; outline:none; min-width:180px;
-  }
-  .btn{
-    display:inline-block; padding:12px 16px; border-radius:14px; font-weight:800; text-decoration:none; color:#fff;
-    background:var(--theme1); border:1px solid rgba(255,255,255,.35); box-shadow:0 10px 28px rgba(255,168,220,.35);
-  }
-  /* Sobre que se abre */
-  .envelope{
-    position:relative; width:min(680px, 92vw); margin:14px auto; height:240px; cursor:pointer;
-    perspective:1000px;
-  }
-  .env-body{
-    width:100%; height:100%; position:relative; border-radius:16px; overflow:hidden;
-    background:var(--theme2); box-shadow:0 18px 50px rgba(0,0,0,.35);
-  }
-  .flap{
-    position:absolute; inset:0; height:50%; transform-origin:top; background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.2));
-    border-bottom:1px solid rgba(255,255,255,.45);
-    transition: transform .8s ease; z-index:2;
-  }
-  .paper{
-    position:absolute; left:10%; right:10%; top:55%; height:70%; border-radius:12px; padding:16px; overflow:auto;
-    background:rgba(255,255,255,.96); color:#222; box-shadow:0 10px 30px rgba(0,0,0,.25);
-    transform: translateY(120%); transition: transform .8s ease .25s;
-  }
-  .envelope.open .flap{ transform: rotateX(-180deg); }
-  .envelope.open .paper{ transform: translateY(0%); }
-  .paper h3{margin:0 0 8px}
-  .paper p{line-height:1.7}
-  .sig{margin-top:10px; opacity:.7}
 
-  /* Grid de secciones interactivas */
-  .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin-top:16px}
   .card{
-    background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:16px 14px;
-    box-shadow:0 14px 40px rgba(0,0,0,.3); position:relative; overflow:hidden;
+    width:min(940px,94vw);
+    background: rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.20);
+    border-radius:30px;
+    padding:28px 26px 36px;
+    text-align:center;
+    box-shadow:0 28px 80px rgba(0,0,0,.45);
+    backdrop-filter: blur(10px);
   }
-  .card h3{margin:6px 0 8px; font-size:1.1rem}
-  .reveal{display:none; margin-top:10px; animation:fade .35s ease}
-  .reveal.show{display:block}
-  @keyframes fade{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:none}}
-  .open{margin-top:6px}
-  /* Rueda */
-  .wheel-wrap{display:grid; place-items:center}
-  .wheel{
-    width:220px; height:220px; border-radius:50%; border:8px solid rgba(255,255,255,.35);
-    background: conic-gradient(#ffd6e8 0 60deg,#d5c7ff 60deg 120deg,#bde0fe 120deg 180deg,#ffc8dd 180deg 240deg,#cdb4db 240deg 300deg,#a2d2ff 300deg 360deg);
-    box-shadow:0 10px 30px rgba(0,0,0,.25); transition: transform 2.5s cubic-bezier(.2,.8,.2,1);
-    position:relative;
+  .heart{
+    width:140px; height:140px; margin:0 auto 10px; position:relative;
+    transform: rotate(45deg);
+    background: radial-gradient(circle at 30% 30%, #ffe6f0, var(--pink2) 60%);
+    box-shadow: 0 0 25px rgba(255,175,204,.7), 0 0 80px rgba(255,175,204,.25);
+    animation: beat 1.2s ease-in-out infinite;
   }
-  .pointer{width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:18px solid #fff; margin-top:8px; filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
-  .wheel-label{position:absolute; inset:0; display:grid; place-items:center; font-weight:900; color:#222; text-align:center; padding:10px}
-  /* Slider */
-  .slider{width:100%}
-  .out{margin-top:8px; color:var(--muted)}
-  /* Música */
-  .audio{display:flex; gap:10px; align-items:center; justify-content:center; margin-top:10px}
-  .small{font-size:.9rem; color:var(--muted)}
+  .heart:before,.heart:after{
+    content:""; position:absolute; width:140px; height:140px; border-radius:50%;
+    background:inherit; left:-70px; top:0;
+  }
+  .heart:after{ left:0; top:-70px }
+  @keyframes beat{0%,100%{transform:rotate(45deg) scale(1)} 30%{transform:rotate(45deg) scale(1.06)} 60%{transform:rotate(45deg) scale(1.12)}}
+
+  h1{
+    margin:0 0 10px; font-weight:900; letter-spacing:.2px;
+    font-size:clamp(1.6rem,5.2vw,2.6rem);
+    text-shadow:0 2px 12px rgba(0,0,0,.35);
+  }
+
+  /* Cuenta regresiva */
+  .cd{display:flex; gap:10px; justify-content:center; align-items:center; margin:12px 0 6px; flex-wrap:wrap}
+  .tile{
+    background: rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:16px;
+    padding:10px 12px; min-width:74px;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .num{display:block; font-weight:900; font-size:clamp(1.4rem,6vw,2.2rem)}
+  .lab{display:block; font-size:.78rem; color:var(--muted); letter-spacing:.8px; text-transform:uppercase}
 
   /* Corazones flotantes */
-  .h{position:fixed; width:12px; height:12px; transform:rotate(45deg); background:#ffc8dd; box-shadow:0 0 8px rgba(255,200,221,.8);
+  .h{position:fixed; width:12px; height:12px; transform:rotate(45deg);
+     background:#ffc8dd; box-shadow:0 0 8px rgba(255,200,221,.8);
      opacity:.95; z-index:0; animation: floatUp linear forwards}
   .h:before,.h:after{content:""; position:absolute; width:12px; height:12px; border-radius:50%; background:inherit; left:-6px; top:0}
   .h:after{left:0; top:-6px}
   @keyframes floatUp{0%{transform:translateY(0) rotate(45deg) scale(1); opacity:.95}100%{transform:translateY(-110vh) rotate(45deg) scale(1.2); opacity:0}}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important} }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="glass">
-      <h1 id="title">Para ti, con todo mi amor</h1>
-      <p class="sub">Personaliza la carta y ábrela cuando quieras 💗</p>
+  <main class="card">
+    <div class="heart" aria-hidden="true"></div>
+    <h1>Algo bonito está a punto de aparecer aquí</h1>
 
-      <!-- Controles -->
-      <div class="controls">
-        <div class="namebox">
-          <label for="her">Su nombre:</label>
-          <input id="her" type="text" placeholder="Escribe su nombre…">
-          <button id="applyName" class="btn" type="button">Aplicar</button>
-        </div>
-        <div class="namebox">
-          <span>Tema:</span>
-          <span class="chip" data-theme="pink" data-active="1">Rosa</span>
-          <span class="chip" data-theme="purple">Lila</span>
-          <span class="chip" data-theme="blue">Azul</span>
-        </div>
-      </div>
-
-      <!-- Música opcional -->
-      <div class="audio">
-        <button id="play" class="btn" type="button">🎵 Reproducir música</button>
-        <span class="small">*Opcional: cambia la URL de audio en el código</span>
-      </div>
-
-      <!-- Sobre -->
-      <div id="envelope" class="envelope" title="Haz clic para abrir">
-        <div class="env-body">
-          <div class="flap"></div>
-          <div class="paper">
-            <h3 id="paperTitle">Carta para <span id="herName">ti</span></h3>
-            <p>
-              Gracias por estar aquí. No traigo recuerdos complicados ni fotos,
-              traigo lo que siento hoy: que te elijo, que quiero cuidar lo nuestro
-              con hechos y paciencia, y que veo un futuro donde la distancia ya no nos separe.
-            </p>
-            <p>
-              Prometo escucharte de verdad, sorprenderte con detalles,
-              y recordarte en los días difíciles que eres mi lugar seguro.
-            </p>
-            <p class="sig">— Diego</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Secciones interactivas -->
-      <div class="grid">
-
-        <!-- A. Lo que amo de ti -->
-        <div class="card">
-          <h3>Lo que amo de ti</h3>
-          <button class="btn open" data-target="r1">Abrir</button>
-          <div id="r1" class="reveal">
-            <p>Amo la calma que me das, tu risa que me salva el día y tu forma honesta de mirar el mundo.</p>
-          </div>
-        </div>
-
-        <!-- B. Rueda de sorpresas -->
-        <div class="card">
-          <h3>Gira la rueda de sorpresas</h3>
-          <div class="wheel-wrap">
-            <div id="wheel" class="wheel">
-              <div id="wheelLabel" class="wheel-label">Toca “Girar”</div>
-            </div>
-            <div class="pointer"></div>
-            <button id="spin" class="btn" type="button" style="margin-top:10px;">Girar</button>
-            <div id="reward" class="out"></div>
-          </div>
-        </div>
-
-        <!-- C. Reto 3 corazones -->
-        <div class="card">
-          <h3>Encuentra 3 corazones</h3>
-          <button class="btn open" data-target="r2">Iniciar</button>
-          <div id="r2" class="reveal">
-            <p>Toca la pantalla tres veces para atrapar corazones. Al lograrlo, verás un mensaje secreto ✨</p>
-            <div id="secret" class="out"></div>
-          </div>
-        </div>
-
-        <!-- D. “Qué tanto me haces feliz” -->
-        <div class="card">
-          <h3>Qué tanto me haces feliz</h3>
-          <input id="slider" class="slider" type="range" min="0" max="100" value="75">
-          <div id="meter" class="out">Mucho 💞</div>
-          <button class="btn open" data-target="r3" style="margin-top:8px;">Ver mensaje</button>
-          <div id="r3" class="reveal">
-            <p>Cualquiera que sea el número, la respuesta es la misma: contigo quiero futuro.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <script>
-    /* ===== Personalización: nombre y tema ===== */
-    const herInput = document.getElementById('her');
-    const herName  = document.getElementById('herName');
-    const paperTitle = document.getElementById('paperTitle');
-    document.getElementById('applyName').addEventListener('click', ()=>{
-      const v = (herInput.value || "ti").trim();
-      herName.textContent = v;
-      paperTitle.innerHTML = 'Carta para <span id="herName">'+v+'</span>';
-      sprinkleHearts(20);
-    });
-    document.querySelectorAll('.chip').forEach(ch=>{
-      ch.addEventListener('click', ()=>{
-        document.querySelectorAll('.chip').forEach(x=>x.dataset.active="0");
-        ch.dataset.active="1";
-        const t = ch.dataset.theme;
-        if(t==='pink'){ document.documentElement.style.setProperty('--theme1','linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%)'); }
-        if(t==='purple'){ document.documentElement.style.setProperty('--theme1','linear-gradient(135deg, #f5c6ff 0%, #c79bff 55%, #b1e0ff 100%)'); }
-        if(t==='blue'){ document.documentElement.style.setProperty('--theme1','linear-gradient(135deg, #c7eaff 0%, #a9d6ff 55%, #d0baff 100%)'); }
-        sprinkleHearts(14);
-      });
-    });
-
-    /* ===== Música (opcional) ===== */
-    const audio = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_9c10b3f1a3.mp3?filename=love-11466.mp3"); // Cambia esta URL por tu canción
-    audio.loop = true;
-    document.getElementById('play').addEventListener('click', ()=>{
-      if(audio.paused){ audio.play(); } else { audio.pause(); }
-    });
-
-    /* ===== Sobre que se abre ===== */
-    const env = document.getElementById('envelope');
-    env.addEventListener('click', ()=>{
-      env.classList.toggle('open');
-      if(env.classList.contains('open')){ burstHearts(40); }
-    });
-
-    /* ===== Abrir tarjetas ===== */
-    document.querySelectorAll('.open').forEach(b=>{
-      b.addEventListener('click', ()=>{
-        const id = b.dataset.target;
-        const r = document.getElementById(id);
-        r.classList.toggle('show');
-        burstHearts(14);
-      });
-    });
-
-    /* ===== Rueda de sorpresas ===== */
-    const wheel = document.getElementById('wheel');
-    const wheelLabel = document.getElementById('wheelLabel');
-    const reward = document.getElementById('reward');
-    const prizes = [
-      "Vale por una noche de juegos juntos 🎮",
-      "Canción dedicada y cantada por mí 🎤",
-      "Cita virtual con película y snacks 🍿",
-      "Carta sorpresa otro día 💌",
-      "Un poema improvisado de 10 líneas ✍️",
-      "Un día entero de cumplidos para ti 🌸"
-    ];
-    document.getElementById('spin').addEventListener('click', ()=>{
-      const turns = 720 + Math.floor(Math.random()*360); // 2 vueltas + aleatorio
-      wheel.style.transform = `rotate(${turns}deg)`;
-      const idx = Math.floor(((turns % 360) / 60)); // 6 sectores de 60°
-      setTimeout(()=>{
-        const gift = prizes[(6 - idx) % 6];
-        wheelLabel.textContent = "¡Listo!";
-        reward.textContent = "Sorpresa: " + gift;
-        burstHearts(30);
-      }, 2600);
-    });
-
-    /* ===== Reto 3 corazones ===== */
-    let caught = 0;
-    document.getElementById('r2').addEventListener('click', ()=>{
-      caught++;
-      if(caught >= 3){
-        document.getElementById('secret').innerHTML = "Mensaje secreto: Gracias por elegirme. Yo te elijo hoy y siempre. 💖";
-        burstHearts(50);
-        caught = 0;
-      } else {
-        sprinkleHearts(6);
-      }
-    });
-
-    /* ===== Slider felicidad ===== */
-    const slider = document.getElementById('slider');
-    const meter  = document.getElementById('meter');
-    slider.addEventListener('input', ()=>{
-      const v = +slider.value;
-      const text = v<25? "Siempre": v<50? "Muchísimo": v<75? "Mucho 💞": "Infinito 💘";
-      meter.textContent = text;
-    });
-
-    /* ===== Corazones flotantes y confeti ===== */
-    function makeHeart(x,y,dur,color,size=12){
-      const h=document.createElement("div");
-      h.className="h";
-      h.style.left=x+"vw"; h.style.top=y+"vh";
-      h.style.width=h.style.height=size+"px";
-      h.style.background=color;
-      h.style.animationDuration=dur+"ms";
-      document.body.appendChild(h);
-      setTimeout(()=>h.remove(),dur);
-    }
-    function sprinkleHearts(count=8){
-      const colors=["#ffc8dd","#ffafcc","#cdb4db","#bde0fe","#a2d2ff","#ffe3f0"];
-      for(let i=0;i<count;i++){
-        const x=Math.random()*100;
-        const y=100+Math.random()*20;
-        const dur=5000+Math.random()*4500;
-        const color=colors[Math.floor(Math.random()*colors.length)];
-        const size=10+Math.random()*8;
-        setTimeout(()=>makeHeart(x,y,dur,color,size), i*60);
-      }
-    }
-    function burstHearts(n){ sprinkleHearts(n); }
-    setInterval(()=>sprinkleHearts(5), 1400);
-  </script>
-</body>
-</html>
+    <!-- Cuenta regresiva -->
+    <div class="cd" id="cd">
+      <div class="tile"><span id="d" class="num">0</span><span class="lab">DÍAS</span></div>
+      <div class="tile"><span id="h" class="num">00</span><span class="lab">HORAS</span></div>
+      <div class="tile"><span id="m" class="num">00</span><span class="lab">MIN</span></div>
+      <di
