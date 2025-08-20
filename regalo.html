@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Elige tu regalo ✨</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --muted:#e9ecf6; --green:#38e27a;
+    --panel:rgba(255,255,255,.10); --border:rgba(255,255,255,.22);
+    --glow:0 18px 60px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    color:#fff; background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
+    animation: sky 14s ease-in-out infinite alternate; padding:16px; overflow-x:hidden;
+  }
+  @keyframes sky{
+    0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
+    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
+    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
+  }
+  header{max-width:1100px;margin:0 auto 12px;text-align:center}
+  h1{margin:6px 0 2px; font-weight:900; font-size:clamp(1.5rem,5.2vw,2.4rem); text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  .sub{margin:0 8px 10px; color:var(--muted)}
+  .grid{max-width:1100px;margin:0 auto; display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:20px;
+    box-shadow:var(--glow); backdrop-filter:blur(10px);
+    overflow:hidden; position:relative; transition:.25s;
+  }
+  .card:hover{transform:translateY(-3px)}
+  .pic{display:block; aspect-ratio:1/1; width:100%; object-fit:cover}
+  .body{padding:12px}
+  .title{font-weight:800}
+  .btn{
+    display:inline-block; margin-top:10px; padding:10px 14px; border-radius:12px; font-weight:800;
+    color:#fff; text-decoration:none; background:linear-gradient(135deg, #ffc8dd, #a2d2ff);
+    border:1px solid rgba(255,255,255,.5); box-shadow:0 10px 28px rgba(255,168,220,.35); cursor:pointer
+  }
+  .tag{
+    position:absolute; top:10px; left:10px; background:rgba(0,0,0,.5);
+    padding:6px 10px; border-radius:999px; font-weight:800
+  }
+  .confirmed{
+    outline:3px solid var(--green);
+    box-shadow:0 0 0 5px rgba(56,226,122,.25), var(--glow);
+  }
+  .disabled{opacity:.55; filter:saturate(.7); pointer-events:none}
+  .badge{
+    position:absolute; right:10px; top:10px; background:var(--green); color:#042; font-weight:900;
+    border-radius:999px; padding:6px 10px; display:none;
+  }
+  .card.confirmed .badge{display:inline-block}
+
+  .result{
+    max-width:1100px; margin:16px auto 0; padding:14px;
+    background:var(--panel); border:1px solid var(--border); border-radius:18px; box-shadow:var(--glow);
+    display:none;
+  }
+  .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+  .copy{padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.1); color:#fff; cursor:pointer}
+  .ok{background:linear-gradient(135deg, #ffc8dd, #a2d2ff); border:1px solid rgba(255,255,255,.6)}
+
+  /* confeti corazones */
+  .h{position:fixed;width:12px;height:12px;transform:rotate(45deg);background:#ffc8dd;box-shadow:0 0 8px rgba(255,200,221,.8);
+     opacity:.95;z-index:5;animation:floatUp linear forwards}
+  .h:before,.h:after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:inherit;left:-6px;top:0}
+  .h:after{left:0;top:-6px}
+  @keyframes floatUp{0%{transform:translateY(0) rotate(45deg) scale(1);opacity:.95}
+                     100%{transform:translateY(-110vh) rotate(45deg) scale(1.2);opacity:0}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Elige tu regalo ✨</h1>
+    <p class="sub">Toca una tarjeta para elegir. Confirmaremos y se marcará en verde. 💚</p>
+  </header>
+
+  <section id="grid" class="grid"></section>
+
+  <section id="result" class="result">
+    <h3 id="summary">Elegiste: —</h3>
+    <div class="row" style="margin-top:6px">
+      <button id="whats" class="btn">Enviar por WhatsApp</button>
+      <a id="mailto" class="btn" href="#">Enviar por correo</a>
+      <button id="copy" class="copy">Copiar enlace con tu elección</button>
+      <span id="copied" style="opacity:.9"></span>
+    </div>
+    <p style="margin:10px 0 0;color:#e9ecf6;opacity:.9">Tu elección también se guarda en este dispositivo.</p>
+  </section>
+
+<script>
+/* ======= CONFIG ======= */
+const PHONE   = "52xxxxxxxxxx"; // ← tu número WhatsApp (sin +, sin espacios)
+const WEBHOOK = "https://script.google.com/macros/s/AKfycbw1pCLT-qUeK1piz8LING6UFet-MfSKsRcAM7Jc9iWAKQ2frQcS-2mdAqBaV_QnHh1kw/exec";
+
+const OPTIONS = [
+  {id:"makka",  name:"Peluche de Makka Pakka", img:"opcion%201.png"},
+  {id:"snoopy", name:"Peluche de Snoopy",      img:"snupi.png"},
+  {id:"robux",  name:"Robux",                  img:"robux.png"},
+  {id:"lala",   name:"Lalaloopsy",             img:"lala%20looplsi.png"}
+];
+
+const grid = document.getElementById("grid");
+const saved = JSON.parse(localStorage.getItem("giftChoice")||"null");
+let confirmedPayload = saved || null;
+
+function cardHTML(opt){
+  return `
+    <span class="tag">${opt.name}</span>
+    <span class="badge">Confirmado ✅</span>
+    <img class="pic" src="${opt.img}" alt="${opt.name}">
+    <div class="body">
+      <div class="title">${opt.name}</div>
+      <button class="btn">Elegir</button>
+    </div>
+  `;
+}
+
+function render(){
+  grid.innerHTML="";
+  OPTIONS.forEach(opt=>{
+    const card=document.createElement("article");
+    const isChosen = confirmedPayload && confirmedPayload.id === opt.id;
+    card.className = "card" + (isChosen ? " confirmed" : "");
+    card.innerHTML = cardHTML(opt);
+    const btn = card.querySelector(".btn");
+    btn.addEventListener("click",()=> onChoose(opt));
+    grid.appendChild(card);
+  });
+
+  if(confirmedPayload){
+    [...grid.children].forEach(c=>{
+      if(!c.classList.contains("confirmed")) c.classList.add("disabled");
+    });
+  }
+  showResult(confirmedPayload);
+}
+
+/* Confirmación */
+async function onChoose(opt){
+  if(confirmedPayload){
+    alert("Ya hay un regalo confirmado 💚");
+    return;
+  }
+  const yes = confirm(`¿Confirmas "${opt.name}" como tu regalo?`);
+  if(!yes) return;
+
+  const payload = {
+    id: opt.id,
+    name: opt.name,
+    ts: Date.now(),
+    code: genCode(opt.id),
+    ua: navigator.userAgent,
+    ref: document.referrer
+  };
+
+  confirmedPayload = payload;
+  localStorage.setItem("giftChoice", JSON.stringify(payload));
+  burstHearts(60);
+  render();
+  pingWebhook(payload); // registra en tu hoja
+}
+
+function genCode(id){
+  const t = Date.now().toString(36).slice(-6);
+  return (id+"-"+t).toUpperCase();
+}
+
+/* Resultado + compartir */
+const $result = document.getElementById("result");
+const $summary= document.getElementById("summary");
+const $whats  = document.getElementById("whats");
+const $mailto = document.getElementById("mailto");
+const $copy   = document.getElementById("copy");
+const $copied = document.getElementById("copied");
+
+function showResult(p){
+  if(!p){ $result.style.display="none"; return; }
+  $result.style.display="block";
+  $summary.textContent = `Elegiste: ${p.name}  ·  Código: ${p.code}`;
+  buildShareLinks(p);
+}
+function buildShareLinks(p){
+  const base = location.origin + location.pathname.replace(/[^/]+$/,"") + "regalo.html";
+  const link = `${base}?c=${encodeURIComponent(p.id)}&code=${encodeURIComponent(p.code)}&t=${p.ts}`;
+  const msg  = `Elegí mi regalo: *${p.name}*%0ACódigo: *${p.code}*%0AEnlace: ${encodeURIComponent(link)}`;
+
+  $whats.onclick = () => {
+    const url = PHONE ? `https://wa.me/${PHONE}?text=${msg}` : `https://wa.me/?text=${msg}`;
+    window.open(url, "_blank");
+  };
+  $mailto.href = `mailto:?subject=Mi elección de regalo&body=${msg}`;
+
+  $copy.onclick = async ()=>{
+    try{
+      await navigator.clipboard.writeText(link);
+      $copied.textContent = "¡Enlace copiado! Pégalo en WhatsApp.";
+      $copy.classList.add("ok");
+      setTimeout(()=>{$copy.classList.remove("ok"); $copied.textContent="";}, 1800);
+    }catch(e){
+      $copied.textContent = link;
+    }
+  };
+}
+
+/* Leer la última elección del webhook (para que tú la veas al entrar) */
+(async function readLast(){
+  try{
+    const r = await fetch(WEBHOOK + "?last=1");
+    const j = await r.json();
+    if(j?.ok && j.last && j.last.id){
+      confirmedPayload = {
+        id: j.last.id,
+        name: OPTIONS.find(o=>o.id===j.last.id)?.name || j.last.name || j.last.id,
+        code: j.last.code || genCode(j.last.id),
+        ts: +j.last.ts || Date.now()
+      };
+      localStorage.setItem("giftChoice", JSON.stringify(confirmedPayload));
+    }
+  }catch(e){ /* si falla, seguimos con localStorage */ }
+  render();
+})();
+
+/* Enviar al webhook */
+async function pingWebhook(payload){
+  try{
+    await fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  }catch(e){/* silencio */}
+}
+
+/* confeti de corazones */
+function makeHeart(x,y,dur,color,size=12){
+  const h=document.createElement("div");
+  h.className="h";
+  h.style.left=x+"vw"; h.style.top=y+"vh";
+  h.style.width=h.style.height=size+'px';
+  h.style.background=color;
+  h.style.animationDuration=dur+'ms';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),dur);
+}
+function sprinkleHearts(count=8){
+  const colors=["#ffc8dd","#ffafcc","#cdb4db","#bde0fe","#a2d2ff","#ffe3f0"];
+  for(let i=0;i<count;i++){
+    const x=Math.random()*100, y=100+Math.random()*20;
+    const dur=4200+Math.random()*4200;
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    const size=10+Math.random()*8;
+    setTimeout(()=>makeHeart(x,y,dur,color,size), i*45);
+  }
+}
+function burstHearts(n){ sprinkleHearts(n); }
+setInterval(()=>sprinkleHearts(5),1400);
+</script>
+</body>
+</html>
