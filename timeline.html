@@ -1,218 +1,199 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nuestra historia — Línea del tiempo 💞</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Nuestra línea del tiempo ✨</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --panel:rgba(255,255,255,.14); --border:rgba(255,255,255,.25);
-    --pink:#ffc8dd; --purple:#cdb4db; --blue2:#a2d2ff; --muted:#eef1f7;
+    --ink:#1a1b26; --muted:#e9ecf6;
+    --pink:#ffc8dd; --purple:#cdb4db; --blue:#bde0fe; --blue2:#a2d2ff;
+    --panel:rgba(255,255,255,.10); --border:rgba(255,255,255,.22);
+    --glow:0 18px 60px rgba(0,0,0,.45);
   }
-  *{box-sizing:border-box} html,body{height:100%;margin:0}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
   body{
-    font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:#fff;
-    background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
-    animation:sky 14s ease-in-out infinite alternate; overflow-x:hidden;
+    font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    color:#fff; background: radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
+    animation: sky 14s ease-in-out infinite alternate;
+    padding:16px;
   }
   @keyframes sky{
     0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
     50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
     100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
   }
-  header{max-width:1000px;margin:0 auto;padding:22px 16px 0;text-align:center}
-  h1{margin:0 0 6px;font-weight:800;font-size:clamp(1.5rem,5vw,2.4rem);text-shadow:0 2px 12px rgba(0,0,0,.35)}
-  .sub{margin:0 0 14px;color:var(--muted);opacity:.9}
-  .controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 18px}
-  .btn{
-    display:inline-block;padding:12px 16px;border-radius:14px;font-weight:800;text-decoration:none;color:#fff;
-    background:linear-gradient(135deg,#ffc8dd 0%, #cdb4db 55%, #a2d2ff 100%); border:1px solid rgba(255,255,255,.45);
-    box-shadow:0 12px 30px rgba(255,168,220,.35)
-  }
 
-  .wrap{max-width:1000px;margin:0 auto 28px;padding:0 14px;position:relative}
-  .line{
-    position:absolute;left:50%;top:0;bottom:0;width:4px;transform:translateX(-50%);
-    background:linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.15));
-    border-radius:4px; opacity:.8;
-  }
+  header{max-width:1100px;margin:0 auto 12px;text-align:center}
+  h1{margin:6px 0 2px; font-weight:900; font-size:clamp(1.5rem,5.2vw,2.4rem); text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  .sub{margin:0 0 12px; color:var(--muted)}
 
-  .item{
-    position:relative;display:grid;grid-template-columns:1fr;gap:12px;margin:26px 0;
-    opacity:0; transform:translateY(20px); transition:opacity .5s ease, transform .5s ease;
+  .wrap{max-width:1100px;margin:0 auto; display:grid; gap:14px; grid-template-columns: 1fr; }
+  @media(min-width:900px){ .wrap{grid-template-columns: 420px 1fr; align-items:start} }
+
+  .panel{
+    background:var(--panel); border:1px solid var(--border); border-radius:22px;
+    box-shadow:var(--glow); backdrop-filter:blur(10px);
   }
-  .item.show{opacity:1; transform:none;}
+  .left{padding:14px}
+  .event{
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:16px; padding:12px 12px 14px; margin:10px 0;
+    background:rgba(255,255,255,.06);
+    cursor:pointer; transition:.2s; position:relative;
+  }
+  .event:hover{transform:translateY(-2px)}
+  .date{opacity:.85; font-size:.9rem; margin-bottom:4px}
+  .title{font-weight:800}
+  .excerpt{opacity:.95; margin-top:6px}
+
   .dot{
-    position:absolute;top:12px;left:50%;transform:translate(-50%,-50%);
-    width:16px;height:16px;border-radius:50%;
-    background:linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
-    box-shadow:0 0 0 6px rgba(255,255,255,.14), 0 10px 24px rgba(0,0,0,.3);
+    position:absolute; right:-10px; top:14px; width:14px; height:14px; border-radius:50%;
+    background:linear-gradient(135deg, var(--pink), var(--blue2)); box-shadow:0 0 0 4px rgba(255,255,255,.12);
   }
 
-  @media (min-width: 760px){
-    .item{grid-template-columns:1fr 1fr}
-    .item.left  .card{grid-column:1}
-    .item.left  .thumb {grid-column:2}
-    .item.right .card{grid-column:2}
-    .item.right .thumb {grid-column:1}
+  .right{padding:0; overflow:hidden}
+  .viewer-head{
+    display:flex; align-items:center; gap:10px; padding:12px 14px;
+    border-bottom:1px solid rgba(255,255,255,.15)
+  }
+  .back{
+    background:linear-gradient(135deg, var(--pink), var(--blue2));
+    border:1px solid rgba(255,255,255,.4); color:#fff; font-weight:800;
+    border-radius:999px; padding:8px 14px; text-decoration:none; box-shadow:0 10px 28px rgba(255,168,220,.35)
+  }
+  .viewer-body{padding:14px; min-height:300px}
+  .viewer-title{margin:4px 0 2px; font-weight:900}
+  .viewer-date{opacity:.85}
+  .viewer-text{margin-top:10px; line-height:1.7; color:#fff}
+  .viewer-img{
+    display:block; max-width:100%; border-radius:14px; margin:10px auto 0; box-shadow:0 12px 30px rgba(0,0,0,.35)
   }
 
-  .card{
-    background:var(--panel); border:1px solid var(--border);
-    border-radius:20px; padding:14px; backdrop-filter:blur(10px);
-    box-shadow:0 14px 40px rgba(0,0,0,.3);
-    cursor:pointer;
+  /* Botón final para ir al regalo */
+  .footer{
+    max-width:1100px; margin:18px auto 0; text-align:center;
   }
-  .date{font-size:.9rem;color:var(--muted);letter-spacing:.6px}
-  .title{margin:4px 0 6px;font-weight:800}
-  .mini{margin:0;line-height:1.7}
-
-  .thumb{
-    border-radius:20px; overflow:hidden; min-height:220px; background:#0f1117;
-    border:1px solid rgba(255,255,255,.18); box-shadow:0 14px 40px rgba(0,0,0,.3); cursor:pointer;
+  .cta{
+    display:inline-block; margin-top:10px; padding:12px 20px; border-radius:14px; font-weight:900;
+    color:#fff; text-decoration:none; letter-spacing:.2px;
+    background:linear-gradient(135deg, var(--pink), var(--blue2));
+    border:1px solid rgba(255,255,255,.6); box-shadow:0 14px 36px rgba(255,168,220,.35);
   }
-  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-
-  /* Modal */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:30;padding:16px}
-  .modal.open{display:flex}
-  .modal .box{
-    width:min(900px,96vw); max-height:92vh; overflow:auto;
-    background:#fff; color:#222; border-radius:18px; padding:16px;
-    box-shadow:0 24px 70px rgba(0,0,0,.6);
-  }
-  .modal h3{margin:0 0 6px}
-  .modal p{line-height:1.7;margin:.5em 0}
-  .media{border-radius:14px; overflow:hidden; border:1px solid #eee; margin:6px 0 10px}
-  .media img, .media video{width:100%; height:auto; display:block}
-  .close{
-    position:sticky; top:0; float:right; margin:-6px -6px 6px 0;
-    background:#ff4d6d; color:#fff; border:none; border-radius:10px; padding:8px 12px; font-weight:800; cursor:pointer;
-  }
+  .cta:hover{transform:translateY(-2px)}
 </style>
 </head>
 <body>
+  <header>
+    <h1>Nuestra línea del tiempo ✨</h1>
+    <p class="sub">Toca cada recuerdo para verlo completo.</p>
+  </header>
 
-<header>
-  <h1>Nuestra línea del tiempo ✨</h1>
-  <p class="sub">Toca cada recuerdo para verlo completo.</p>
-  <div class="controls">
-    <a class="btn" href="carta.html">Atrás</a>
+  <main class="wrap">
+    <!-- LISTA IZQUIERDA -->
+    <section id="list" class="panel left"></section>
+
+    <!-- VISOR DERECHO -->
+    <section class="panel right">
+      <div class="viewer-head">
+        <a class="back" href="./carta.html">Atrás</a>
+        <div>
+          <div id="vTitle" class="viewer-title">Selecciona un recuerdo</div>
+          <div id="vDate" class="viewer-date">—</div>
+        </div>
+      </div>
+      <div class="viewer-body">
+        <div id="vText" class="viewer-text">Aquí verás el texto completo, sin cortes. 💖</div>
+        <img id="vImg" class="viewer-img" src="" alt="" style="display:none">
+      </div>
+    </section>
+  </main>
+
+  <!-- Botón al FINAL para ir a la página de regalos -->
+  <div class="footer">
+    <a class="cta" href="./regalo.html">🎁 Ir a elegir mi regalo</a>
   </div>
-</header>
-
-<div class="wrap" id="wrap">
-  <div class="line" aria-hidden="true"></div>
-  <!-- Se rellenará con JS -->
-</div>
-
-<!-- Modal -->
-<div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Detalle del recuerdo">
-  <div class="box">
-    <button class="close" id="closeBtn">Cerrar ✖</button>
-    <h3 id="mTitle"></h3>
-    <div class="media" id="mMedia"></div>
-    <p id="mText"></p>
-  </div>
-</div>
 
 <script>
-/* === TUS RECUERDOS (ya cargados con tus textos) === */
-const items = [
+/* ========= EDITA AQUÍ TUS RECUERDOS =========
+   Puedes poner texto largo sin problema. Opcional: propiedad "img". */
+const timeline = [
   {
-    fecha: "30 Julio 2024",
-    titulo: "Mi primera carta para ti",
-    mini: "Recuerdo de la primera vez que te escribir una carta mi amor, estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien",
-    texto: "Recuerdo de la primera vez que te escribí una carta, mi amor. Estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien.",
-    src: "IMG-20250819-WA0029.jpg", type: "img"
+    date: "30 Jul 2024",
+    title: "Mi primera carta para ti",
+    text: `La primera vez que te escribí, con mil nervios y el corazón lleno.
+    (Pega aquí tu texto completo si quieres).`
   },
   {
-    fecha: "22 Julio 2024",
-    titulo: "Tu primera carta para mí",
-    mini: "Esta fue la primera vez que me escribiste una carta, me lo escribiste poquito despues de que te pidiera ser mi novia, senti muy bonito al leerla y ame que nuestros sentimientos fueran mutuos 💖",
-    texto: "Esta fue la primera vez que me escribiste una carta. Me la diste poquito después de que te pidiera ser mi novia. Sentí muy bonito al leerla y amé que nuestros sentimientos fueran mutuos.",
-    src: "IMG-20250819-WA0024.jpg", type: "img"
+    date: "22 Jul 2024",
+    title: "Tu primera carta para mí",
+    text: `Ese mensaje tuyo que me hizo sentir elegido.
+    (Pega aquí el texto completo o un resumen).`
   },
   {
-    fecha: "20 Julio 2025",
-    titulo: "Tus primeras flores",
-    mini: "Estas fueron las primeras flores que te di, estaba muy nervioso porque no sabía como enviarte, no sabía si te iban a gustar además que era la primera vez que enviaba algo a tu casa, espero que te hayan gustado porque se que en el futuro te daré muchas mas flores mi amor 🌷",
-    texto: "Estas fueron las primeras flores que te di. Estaba muy nervioso porque no sabía cómo enviarte, no sabía si te iban a gustar, además era la primera vez que enviaba algo a tu casa. Espero que te hayan gustado, porque sé que en el futuro te daré muchas más flores, mi amor.",
-    src: "IMG-20250819-WA0028.jpg", type: "img"
+    date: "12 May 2025",
+    title: "La primera vez que nos vimos",
+    text: `Ese día en que te tuve enfrente y todo se acomodó.
+    (Pega aquí tu relato de ese momento).`
   },
   {
-    fecha: "12 Mayo 2025",
-    titulo: "El día que nos vimos",
-    mini: "Este fue el dia mas feliz de mi vida, conocí al amor de mi vida y cuando te abrace me senti en el cielo, ame mucho ese dia porque porfin pude verte en persona y me enamore mucho mas de lo que ya estaba, me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta ✨",
-    texto: "Este fue el día más feliz de mi vida: conocí al amor de mi vida y cuando te abracé me sentí en el cielo. Amé mucho ese día porque por fin pude verte en persona y me enamoré mucho más de lo que ya estaba. Me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta.",
-    src: "IMG-20250819-WA0030.jpg", type: "img"
+    date: "20 Jul 2025",
+    title: "Las primeras flores que te di",
+    text: `El primer ramo que te envié/entregué y lo que sentí al hacerlo.
+    (Pega aquí los detalles).`
   },
   {
-    fecha: "Siempre",
-    titulo: "Amo tus detalles",
-    mini: "Amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito, amor cada dibujo, cada carta, todo de ti me vuelve loco mi amor 💌",
-    texto: "Amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito. Amo cada dibujo, cada carta… todo de ti me vuelve loco, mi amor.",
-    src: "IMG-20250814-WA0005.jpg", type: "img"
+    date: "", // sin fecha
+    title: "Tus cartas y dibujos",
+    text: `No tienen fecha porque llegan seguido. Gracias por cada detalle que me haces.
+    (Puedes pegar algo más aquí).`
   }
 ];
 
-/* === Render === */
-const wrap = document.getElementById('wrap');
-items.forEach((it, idx)=>{
-  const side = (idx % 2 === 0) ? 'left' : 'right';
-  const sec = document.createElement('section');
-  sec.className = `item ${side}`;
-  sec.innerHTML = `
-    <div class="dot" aria-hidden="true"></div>
-    <article class="card" data-i="${idx}">
-      <div class="date">${it.fecha}</div>
-      <div class="title">${it.titulo}</div>
-      <p class="mini">${it.mini}</p>
-    </article>
-    <figure class="thumb" data-i="${idx}">
-      <img src="${it.src}" alt="${it.titulo}">
-    </figure>
-  `;
-  wrap.appendChild(sec);
-});
+const $list = document.getElementById('list');
+const $vTitle = document.getElementById('vTitle');
+const $vDate  = document.getElementById('vDate');
+const $vText  = document.getElementById('vText');
+const $vImg   = document.getElementById('vImg');
 
-/* === Animación al entrar en viewport === */
-const observer = new IntersectionObserver((obs)=>{
-  obs.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
-},{threshold:.15});
-document.querySelectorAll('.item').forEach(n=>observer.observe(n));
-
-/* === Modal === */
-const modal = document.getElementById('modal');
-const mTitle = document.getElementById('mTitle');
-const mMedia = document.getElementById('mMedia');
-const mText  = document.getElementById('mText');
-function openModal(i){
-  const it = items[i];
-  mTitle.textContent = `${it.fecha} — ${it.titulo}`;
-  mText.textContent  = it.texto;
-  mMedia.innerHTML = (it.type === 'img')
-    ? `<img src="${it.src}" alt="${it.titulo}">`
-    : `<video controls src="${it.src}"></video>`;
-  modal.classList.add('open');
+function renderList() {
+  $list.innerHTML = "";
+  timeline.forEach((ev, i) => {
+    const card = document.createElement('article');
+    card.className = 'event';
+    card.innerHTML = `
+      <div class="date">${ev.date || "Sin fecha"}</div>
+      <div class="title">${ev.title}</div>
+      <div class="excerpt">${sanitize(ev.text).split('\n')[0]}</div>
+      <span class="dot"></span>
+    `;
+    card.addEventListener('click', () => openEvent(i));
+    $list.appendChild(card);
+  });
 }
-function closeModal(){ modal.classList.remove('open'); }
 
-/* abrir al tocar tarjeta o miniatura */
-document.querySelectorAll('.card, .thumb').forEach(el=>{
-  el.addEventListener('click', e => openModal(e.currentTarget.dataset.i));
-});
-document.getElementById('closeBtn').addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+function openEvent(i){
+  const ev = timeline[i];
+  $vTitle.textContent = ev.title;
+  $vDate.textContent = ev.date || "Sin fecha";
+  $vText.innerHTML = sanitize(ev.text).replace(/\n/g, "<br>");
+  if(ev.img){
+    $vImg.src = ev.img;
+    $vImg.style.display = 'block';
+  } else {
+    $vImg.style.display = 'none';
+  }
+}
 
-/* Pre-carga básica */
-items.forEach(it=>{ if(it.type==='img'){ const im=new Image(); im.src = it.src; }});
+// Evita que HTML incrustado rompa el layout
+function sanitize(str=""){
+  return str.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
+}
 
-  <a class="btn" href="https://script.google.com/macros/s/AKfycbw1pCLT-qUeK1piz8LING6UFet-MfSKsRcAM7JCc9IWAKQ2frQcS-2mdAqBaV_QnHh1kw/exec" target="_blank">
-    🎁 Ver mi regalo
-  </a>
-
+renderList();
 </script>
 </body>
 </html>
