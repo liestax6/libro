@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nuestra historia — Línea del tiempo 💞</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --panel:rgba(255,255,255,.14); --border:rgba(255,255,255,.25);
+    --pink:#ffc8dd; --purple:#cdb4db; --blue2:#a2d2ff; --muted:#eef1f7;
+  }
+  *{box-sizing:border-box} html,body{height:100%;margin:0}
+  body{
+    font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:#fff;
+    background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26);
+    animation:sky 14s ease-in-out infinite alternate; overflow-x:hidden;
+  }
+  @keyframes sky{
+    0%{background:radial-gradient(1200px 600px at 50% -12%, #e2d9f3, #1a1b26)}
+    50%{background:radial-gradient(1200px 600px at 50% -12%, #ffc8dd, #171825)}
+    100%{background:radial-gradient(1200px 600px at 50% -12%, #bde0fe, #14151f)}
+  }
+  header{max-width:1000px;margin:0 auto;padding:22px 16px 0;text-align:center}
+  h1{margin:0 0 6px;font-weight:800;font-size:clamp(1.5rem,5vw,2.4rem);text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  .sub{margin:0 0 14px;color:var(--muted);opacity:.9}
+  .controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 18px}
+  .btn{
+    display:inline-block;padding:12px 16px;border-radius:14px;font-weight:800;text-decoration:none;color:#fff;
+    background:linear-gradient(135deg,#ffc8dd 0%, #cdb4db 55%, #a2d2ff 100%); border:1px solid rgba(255,255,255,.45);
+    box-shadow:0 12px 30px rgba(255,168,220,.35)
+  }
+
+  .wrap{max-width:1000px;margin:0 auto 28px;padding:0 14px;position:relative}
+  .line{
+    position:absolute;left:50%;top:0;bottom:0;width:4px;transform:translateX(-50%);
+    background:linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.15));
+    border-radius:4px; opacity:.8;
+  }
+
+  .item{
+    position:relative;display:grid;grid-template-columns:1fr;gap:12px;margin:26px 0;
+    opacity:0; transform:translateY(20px); transition:opacity .5s ease, transform .5s ease;
+  }
+  .item.show{opacity:1; transform:none;}
+  .dot{
+    position:absolute;top:12px;left:50%;transform:translate(-50%,-50%);
+    width:16px;height:16px;border-radius:50%;
+    background:linear-gradient(135deg, var(--pink) 0%, var(--purple) 55%, var(--blue2) 100%);
+    box-shadow:0 0 0 6px rgba(255,255,255,.14), 0 10px 24px rgba(0,0,0,.3);
+  }
+
+  @media (min-width: 760px){
+    .item{grid-template-columns:1fr 1fr}
+    .item.left  .card{grid-column:1}
+    .item.left  .thumb {grid-column:2}
+    .item.right .card{grid-column:2}
+    .item.right .thumb {grid-column:1}
+  }
+
+  .card{
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:20px; padding:14px; backdrop-filter:blur(10px);
+    box-shadow:0 14px 40px rgba(0,0,0,.3);
+    cursor:pointer;
+  }
+  .date{font-size:.9rem;color:var(--muted);letter-spacing:.6px}
+  .title{margin:4px 0 6px;font-weight:800}
+  .mini{margin:0;line-height:1.7}
+
+  .thumb{
+    border-radius:20px; overflow:hidden; min-height:220px; background:#0f1117;
+    border:1px solid rgba(255,255,255,.18); box-shadow:0 14px 40px rgba(0,0,0,.3); cursor:pointer;
+  }
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:30;padding:16px}
+  .modal.open{display:flex}
+  .modal .box{
+    width:min(900px,96vw); max-height:92vh; overflow:auto;
+    background:#fff; color:#222; border-radius:18px; padding:16px;
+    box-shadow:0 24px 70px rgba(0,0,0,.6);
+  }
+  .modal h3{margin:0 0 6px}
+  .modal p{line-height:1.7;margin:.5em 0}
+  .media{border-radius:14px; overflow:hidden; border:1px solid #eee; margin:6px 0 10px}
+  .media img, .media video{width:100%; height:auto; display:block}
+  .close{
+    position:sticky; top:0; float:right; margin:-6px -6px 6px 0;
+    background:#ff4d6d; color:#fff; border:none; border-radius:10px; padding:8px 12px; font-weight:800; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Nuestra línea del tiempo ✨</h1>
+  <p class="sub">Toca cada recuerdo para verlo completo.</p>
+  <div class="controls">
+    <a class="btn" href="carta.html">Atrás</a>
+  </div>
+</header>
+
+<div class="wrap" id="wrap">
+  <div class="line" aria-hidden="true"></div>
+  <!-- Se rellenará con JS -->
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Detalle del recuerdo">
+  <div class="box">
+    <button class="close" id="closeBtn">Cerrar ✖</button>
+    <h3 id="mTitle"></h3>
+    <div class="media" id="mMedia"></div>
+    <p id="mText"></p>
+  </div>
+</div>
+
+<script>
+/* === TUS RECUERDOS (ya cargados con tus textos) === */
+const items = [
+  {
+    fecha: "19 Ago 2025",
+    titulo: "Mi primera carta para ti",
+    mini: "La primera vez que te escribí, con mil nervios y el corazón lleno.",
+    texto: "Recuerdo de la primera vez que te escribí una carta, mi amor. Estaba muy nervioso porque fue la primera vez que sentí tantas ganas de amar a alguien.",
+    src: "IMG-20250819-WA0029.jpg", type: "img"
+  },
+  {
+    fecha: "19 Ago 2025",
+    titulo: "Tu primera carta para mí",
+    mini: "Poquito después de pedirte que fueras mi novia 💖",
+    texto: "Esta fue la primera vez que me escribiste una carta. Me la diste poquito después de que te pidiera ser mi novia. Sentí muy bonito al leerla y amé que nuestros sentimientos fueran mutuos.",
+    src: "IMG-20250819-WA0024.jpg", type: "img"
+  },
+  {
+    fecha: "19 Ago 2025",
+    titulo: "Tus primeras flores",
+    mini: "Las primeras, pero no las últimas 🌷",
+    texto: "Estas fueron las primeras flores que te di. Estaba muy nervioso porque no sabía cómo enviarte, no sabía si te iban a gustar, además era la primera vez que enviaba algo a tu casa. Espero que te hayan gustado, porque sé que en el futuro te daré muchas más flores, mi amor.",
+    src: "IMG-20250819-WA0028.jpg", type: "img"
+  },
+  {
+    fecha: "19 Ago 2025",
+    titulo: "El día que nos vimos",
+    mini: "La primera vez que te abracé en persona ✨",
+    texto: "Este fue el día más feliz de mi vida: conocí al amor de mi vida y cuando te abracé me sentí en el cielo. Amé mucho ese día porque por fin pude verte en persona y me enamoré mucho más de lo que ya estaba. Me llevé un recuerdo a mi casa y fue increíble que cumplimos esa primera meta.",
+    src: "IMG-20250819-WA0030.jpg", type: "img"
+  },
+  {
+    fecha: "14 Ago 2025",
+    titulo: "Amo tus detalles",
+    mini: "Cada carta y dibujo tuyo me vuelve loco 💌",
+    texto: "Amo cada detalle que me das, cada vez que demuestras tu amor y que dedicas de tu tiempo para escribirme algo bonito. Amo cada dibujo, cada carta… todo de ti me vuelve loco, mi amor.",
+    src: "IMG-20250814-WA0005.jpg", type: "img"
+  }
+];
+
+/* === Render === */
+const wrap = document.getElementById('wrap');
+items.forEach((it, idx)=>{
+  const side = (idx % 2 === 0) ? 'left' : 'right';
+  const sec = document.createElement('section');
+  sec.className = `item ${side}`;
+  sec.innerHTML = `
+    <div class="dot" aria-hidden="true"></div>
+    <article class="card" data-i="${idx}">
+      <div class="date">${it.fecha}</div>
+      <div class="title">${it.titulo}</div>
+      <p class="mini">${it.mini}</p>
+    </article>
+    <figure class="thumb" data-i="${idx}">
+      <img src="${it.src}" alt="${it.titulo}">
+    </figure>
+  `;
+  wrap.appendChild(sec);
+});
+
+/* === Animación al entrar en viewport === */
+const observer = new IntersectionObserver((obs)=>{
+  obs.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
+},{threshold:.15});
+document.querySelectorAll('.item').forEach(n=>observer.observe(n));
+
+/* === Modal === */
+const modal = document.getElementById('modal');
+const mTitle = document.getElementById('mTitle');
+const mMedia = document.getElementById('mMedia');
+const mText  = document.getElementById('mText');
+function openModal(i){
+  const it = items[i];
+  mTitle.textContent = `${it.fecha} — ${it.titulo}`;
+  mText.textContent  = it.texto;
+  mMedia.innerHTML = (it.type === 'img')
+    ? `<img src="${it.src}" alt="${it.titulo}">`
+    : `<video controls src="${it.src}"></video>`;
+  modal.classList.add('open');
+}
+function closeModal(){ modal.classList.remove('open'); }
+
+/* abrir al tocar tarjeta o miniatura */
+document.querySelectorAll('.card, .thumb').forEach(el=>{
+  el.addEventListener('click', e => openModal(e.currentTarget.dataset.i));
+});
+document.getElementById('closeBtn').addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+
+/* Pre-carga básica */
+items.forEach(it=>{ if(it.type==='img'){ const im=new Image(); im.src = it.src; }});
+
+</script>
+</body>
+</html>
